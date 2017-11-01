@@ -1,0 +1,78 @@
+<%= form_for @product do |f| %>
+
+	<% if @product.errors.any? %>
+		<h3>These are validations failed: </h3>
+		<ul>
+			<% @product.errors. full_messages.each do |msg| %>
+				<li><%= msg %></li>
+			<% end %>
+		</ul>
+	<% end %>
+
+	<label>Category</label><br/>
+	<%= f.collection_select :category_id, Category.all, :id, :name %> <br/>
+
+	<label>Name</label><br/>
+	<%= f.text_field :name %> 
+	<span id="nameMsg"></span>
+	<br/>
+
+	<label>Price</label><br/>
+	<%= f.text_field :price %> 
+	<span id="priceMsg"></span>
+	<br/>
+
+	<label>Description</label><br/>
+	<%= f.text_area :description %> <br/>
+
+	<label>Stock</label><br/>
+	<%= f.text_field :stock %> <br/>
+
+	<label>Release Date </label><br/>
+	<%= f.datetime_select :release_date %> <br/>
+
+	<label>Cod Eligible</label><br/>
+	<%= f.check_box :cod_eligible %> <br/>
+
+	<label>Image URL</label><br/>
+	<%= f.text_field :image_url %> <br/>
+
+
+
+	<%= f.submit %>
+
+<% end %>
+
+<script>
+	var nameHandle = document.getElementById('product_name');
+	var priceHandle = document.getElementById('product_price');
+	var categoryHandle = document.querySelector('#product_category_id');
+	var nameMsgHandle = document.getElementById('nameMsg');
+	var priceMsgHandle = document.getElementById('priceMsg');
+	var priceFormatter = /^[0-9]*(?:\.\d{1,2})?$/;
+
+	nameHandle.addEventListener('blur',function(){
+		if(nameHandle.value == ""){
+			nameMsgHandle.innerHTML = "Can't be blank";
+		}else if (!nameformatter.test(nameHandle.value)){
+			nameMsgHandle.innerHTML = "Should contain only alphabets";
+		}else{
+			nameMsgHandle.innerHTML = "";
+		}
+	},false); 
+	priceHandle.addEventListener('blur',function(){
+		if(priceHandle.value ==""){
+			priceMsgHandle.innerHTML = "can't be blank";
+		}else if (!priceFormatter.test(priceHandle.value)){
+			priceMsgHandle.innerHTML = "should contain only number";
+		}else if (priceHandle.value <= 0){
+			priceMsgHandle.innerHTML = "should be greater than 0";
+		}else {
+			priceMsgHandle.innerHTML = "";
+		}
+	},false);
+
+</script>
+
+
+

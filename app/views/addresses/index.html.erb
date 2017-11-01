@@ -1,0 +1,34 @@
+<h2>Your addresses</h2>
+	<% if @addresses.empty? %>
+ 		<p>No Address found,,,,Fill Your Address Details</p>
+	<% else %>
+		<table border="1px solid red"; style="padding: 8px;border-collapse: collapse;background-color: #dddddd;"><tr><th>Details</th><th>Landmork</th><th>City</th><th>State</th><th>Pincode</th></tr>
+			<% @addresses.each do |address| %>
+			
+				<tr><td><%= address.details %></td><td><%= address.landmork%></td><td><%= address.city%></td><td><%= address.state%></td><td><%= address.pincode%></td></tr>
+			<% end %>
+		</table>
+	<% end %>
+
+<h2>Here You can add your address</h2>
+</h2>
+<%= form_for @address do |f| %>
+	
+	<%=f.label :Details %></br>
+	<%= f.text_area :details %></br>
+
+	<%= f.label :State %></br>
+	<%= f.text_field :state %></br>
+
+	<%= f.label :City %></br>
+	<%= f.text_field :city %></br>
+
+	<%= f.label :Pincode %></br>
+	<%= f.text_field :pincode %></br>
+
+	<%= f.label :Landmork %></br>
+	<%= f.text_field :landmork %></br>
+
+	<%= f.submit "Add address" %></br>
+<% end %>
+

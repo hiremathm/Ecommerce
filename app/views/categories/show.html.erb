@@ -1,0 +1,16 @@
+<% link_to "back", :back %>
+<h2><%= @category.name%></h2>
+<% if user_signed_in? && current_user.is_admin %>
+<%= link_to "edit",edit_category_path(@category.id) %> |<%= link_to "destroy",category_path(@category.id),method: :delete, data: {confirm: "are you sure"} %>
+<% end %>
+
+<% if @products.empty? %>
+	<h3> No products found</h3>
+<% else %>
+	<h3> Products belonging to <%=@category.name%> (<%= @category.products.size %>) </h3>
+	<ul>
+		<% @category.products.each do |product| %>
+			<li><%= link_to product.name, product_path(product.id) %></li>
+		<% end %>
+	</ul>
+<% end %>

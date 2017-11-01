@@ -1,0 +1,12 @@
+<br/>
+
+ <% if user_signed_in? && current_user.is_admin %> 
+	<%= link_to "Add Product", new_product_path %>
+<% end %>
+<h1>Listing Products - <%= @products.length %> </h1>
+<%= will_paginate @products %>
+<ol>
+    <% @products.each do |product| %>
+	  <li><%= link_to product.name, product_path(product.id)  %> - <%= product.description  %> - <%= product.price  %> - <%= product.stock  %> - <%= product.category_id  %> - <%= product.cod_eligible  %> - <%= product.release_date %></li>
+    <% end %>
+</ol>

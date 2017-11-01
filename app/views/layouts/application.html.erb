@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ecommerce</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<p style="text-align: center;background-color:rgb(255,0,0);border:2px solid blue;color:white;"> <%= link_to "Products", products_path %>  <%= link_to "Categories", categories_path %>----------------------------------------
+
+<% if user_signed_in? %> 
+	Welcome :<%= current_user.username %>----------------------------------------
+	(<%= link_to "Your Cart (#{current_user.cart_line_items.pluck(:quantity).inject(:+)})", cart_line_items_path %>|<%= link_to "Your orders", orders_path %>|<%= link_to "Account Setting", edit_user_registration_path %> | <%= link_to "Logout", destroy_user_session_path, method: :delete %>|<%= link_to "Add Address", addresses_path%>)
+
+<% else %>
+  <%= link_to "Login", new_user_session_path %> | <%= link_to "Register", new_user_registration_path %>
+<% end %></p>
+
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+
+ 
+<%= yield %>
+
+</body>
+</html>

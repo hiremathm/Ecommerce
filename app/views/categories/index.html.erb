@@ -1,0 +1,11 @@
+<% if user_signed_in? && current_user.is_admin %>
+	<h3 style="color:red;"><%= link_to "ADD CATEGORY", new_category_path %></h3>
+<% end %>
+<h1> Listing categories - <%= @categories.length %> </h1>
+<%= will_paginate @categories %>
+
+<ol>
+    <% @categories.each do |category| %>
+	  <li><%= link_to category.name, category_path(category.id) %></li>
+    <%end%>
+</ol>

@@ -1,0 +1,18 @@
+<h2>Your orders</h2>
+<% if @orders.empty? %>
+	<p>you have not placed any orders </p>
+<% else %>
+	<ul>
+		<% @orders.each do |order| %>
+		<li><%= order.order_number%>--<%= order.order_date %>--<%= order.total%>
+			<ol>
+				<% order.order_line_items.each do |order_line_item| %>
+				<li><%= order_line_item.product.name %>--<%= order_line_item.price %>
+				--<%=order_line_item.quantity%><%= order_line_item.price * order_line_item.quantity %>
+				</li>
+				<% end %>
+			</ol>
+		</li>
+		<% end %>
+	</ul>
+<% end %>
