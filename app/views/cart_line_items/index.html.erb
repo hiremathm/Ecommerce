@@ -31,8 +31,6 @@
 
 <h3> Total : <%= sum %></h3>
 
-
-
 <%= form_for @order do |f| %>
 	<% @addresses.each do |address| %>
 		<%= f.radio_button :address_id, address.id %> addresss-<%= address.id %>

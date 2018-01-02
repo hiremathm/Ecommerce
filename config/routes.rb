@@ -1,17 +1,41 @@
 Rails.application.routes.draw do
+  resources :brands
+  get 'ajax/find_by_categories'
+  get 'ajax/autocomplete'
+  get 'ajax/cod_eligible'
+  get 'ajax/by_price_asc'
+  get 'ajax/by_price_desc'
+  get 'validation/check_email'
+  get 'ajax/By_slider'
+  get 'ajax/By_slider1'
+  get 'ajax/By_price_between_100_to_500'
+  get 'ajax/By_price_less_than_100'
+  get 'ajax/By_price_greater_than_500'
+
+  get 'categories/find_sub_categories'
+  resources :categories do 
+    post 'find_sub_categories'
+  end
+
+  resources :sub_categories
+  resources :taxes
   devise_for :users
+  
   get 'categories/index'
-  resources :categories
-  resources :products
+  resources :products do 
+    post 'By_category'
+  end
+
   resources :reviews
   resources :cart_line_items
   resources :orders
+  get 'addresses/contact'
   resources :addresses
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-   root 'categories#index'
+   root 'products#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

@@ -1,0 +1,7 @@
+<% if @review.errors.any? %>
+	 $('#errors').html("<%= @review.errors.full_messages_join(", ")%>")
+<% else %>
+$('errors').hide();
+$('#reviewList').append("<%= escape_javascript render('review')%>");
+$('#new_review')[0].reset();
+<% end %>

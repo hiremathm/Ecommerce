@@ -4,6 +4,7 @@ class ProductsController < ApplicationController
 	def index
 		@products = Product.all
 		@products = Product.paginate(:page => params[:page])
+		@product = Product.new
 	end
 
 	# is used for instantiate an object and setup form
@@ -14,6 +15,7 @@ class ProductsController < ApplicationController
 	def create
 		@product = Product.new(product_params)
 		if @product.save
+			
 			redirect_to product_path(@product.id)
 		else
 			render action: "new"
@@ -41,11 +43,9 @@ class ProductsController < ApplicationController
 		@product.destroy
 		redirect_to products_path, notice:"product succesfully deleted"
 	end
-
-
 	private
 # strong parameters - used to prevent from mass assignment web attack
 	def product_params
-		params[:product].permit(:name, :category_id, :price, :description, :stock, :cod_eligible, :release_date, :image_url)
+		params[:product].permit(:name, :category_id, :price, :description, :stock, :sub_cat_id,:tax_id, :net_price,:cod_eligible, :release_date, :image_url)
 	end
 end

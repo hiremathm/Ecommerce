@@ -4,15 +4,14 @@
 <% else %>
 	<ul>
 		<% @orders.each do |order| %>
-		<li><%= order.order_number%>--<%= order.order_date %>--<%= order.total%>
-			<ol>
-				<% order.order_line_items.each do |order_line_item| %>
-				<li><%= order_line_item.product.name %>--<%= order_line_item.price %>
-				--<%=order_line_item.quantity%><%= order_line_item.price * order_line_item.quantity %>
-				</li>
-				<% end %>
-			</ol>
-		</li>
+		<p><%= order.order_number%>--<%= order.order_date %>--<%= order.total%></p>
+			<% order.order_line_items.each do |order_line_item| %>
+				<p>Product Name: <%= order_line_item.product.name %><br/>
+				Product Price: <%= order_line_item.price %><br/>
+				Product quantity: <%=order_line_item.quantity%><br/>
+				Total Price: <%= order_line_item.price  %><br/>
+			</p>
+			<% end %>
+			
 		<% end %>
-	</ul>
 <% end %>

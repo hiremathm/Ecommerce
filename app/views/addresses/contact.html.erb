@@ -1,0 +1,8 @@
+	<b>Name </b>: <i><%= @contact.username.capitalize %></i><br/>
+	<b>Email </b>: <i><%= @contact.email %><br/></i>
+	<b>Mobile </b>: <i><%= @contact.mobile %><br/></i>
+	<b>Admin </b>:<%if @contact.is_admin? %>
+					<i>Yes</i>
+				<% else %>
+					<i>No</i>
+				<% end %>

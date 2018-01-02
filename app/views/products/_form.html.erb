@@ -10,7 +10,12 @@
 	<% end %>
 
 	<label>Category</label><br/>
-	<%= f.collection_select :category_id, Category.all, :id, :name %> <br/>
+	<%= f.collection_select :category_id, Category.all, :id, :name, prompt: "Select Category"%> <br/>
+	<span id="categoryMsg"></span>
+
+	<label>Sub Category</label><br/>
+	<%= f.collection_select :sub_cat_id, [], :id, :name, prompt: "Select Category" %> <br/>
+	<span id="subCatMsg"></span>
 
 	<label>Name</label><br/>
 	<%= f.text_field :name %> 
@@ -22,56 +27,253 @@
 	<span id="priceMsg"></span>
 	<br/>
 
+	<label>GST</label><br/>
+	<%= f.collection_select :tax_id,Tax.all,:value,:name,prompt: "Select Tax"%>
+	<span id = "taxMsg"></span>
+	<br/>
+
+	<label>Net Price</label><br/>
+	<!-- <input type = "text" name = "net_price" disabled> -->
+	<%= f.text_field :net_price %>
+	<span id = "netPriceMsg"></span>
+	<br/>
+
 	<label>Description</label><br/>
 	<%= f.text_area :description %> <br/>
+	<span id = "desMsg"></span>
 
 	<label>Stock</label><br/>
 	<%= f.text_field :stock %> <br/>
+	<span id = "stockMsg"></span>
 
 	<label>Release Date </label><br/>
 	<%= f.datetime_select :release_date %> <br/>
+	<span id = "dateMsg"></span>
 
 	<label>Cod Eligible</label><br/>
-	<%= f.check_box :cod_eligible %> <br/>
+	<%#= f.check_box :cod_eligible %> <br/>
 
 	<label>Image URL</label><br/>
 	<%= f.text_field :image_url %> <br/>
+	<span id = "imageMsg"></span>
 
 
 
 	<%= f.submit %>
 
 <% end %>
-
+<!-- script for Dynamic select -->
 <script>
+
+	var productCategory = document.querySelector('#product_category_id');
+	var productSubCat = document.querySelector('#product_sub_cat_id');
+
+	productCategory.addEventListener('change', function(){
+		if(productCategory.value !== ""){
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', '../categories/find_sub_categories?category_id=' + productCategory.value);
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState == 4 && xhr.status == 200){
+					var subCategories = JSON.parse(xhr.responseText);
+					productSubCat.innerHTML = "";
+					subCategories.forEach(function(subCategory){
+						var option = document.createElement('option'); 
+						var optValue = document.createAttribute('value'); 
+						optValue.value = subCategory.id  
+						option.setAttributeNode(optValue); 
+						var txt = document.createTextNode(subCategory.name);  
+						option.appendChild(txt);  
+						productSubCat.appendChild(option);
+					}); 
+				}
+			}
+			xhr.send();
+		}
+	}, false)
+
+registrationForm = document.getElementById('new_product');
 	var nameHandle = document.getElementById('product_name');
 	var priceHandle = document.getElementById('product_price');
 	var categoryHandle = document.querySelector('#product_category_id');
+	var subCatHandle = document.querySelector('#product_sub_cat_id');
+	var gstHandle = document.querySelector('#product_tax_id');
+	var desHandle = document.querySelector('#product_description');
+	var stockHandle = document.querySelector('#product_stock');
+	var releaseDateHandle = document.querySelector('#product_release_date');
+	var imageHandle = document.querySelector('#product_image_url');
+	var netPriceHandle = document.querySelector('#product_net_price');
+	document.querySelector('#product_net_price').disabled = true;
+
+
 	var nameMsgHandle = document.getElementById('nameMsg');
 	var priceMsgHandle = document.getElementById('priceMsg');
-	var priceFormatter = /^[0-9]*(?:\.\d{1,2})?$/;
+	var netPriceMsgHandle = document.getElementById('netPriceMsg');
+	var gstMsgHandle = document.getElementById('taxMsg');
+	var categoryMsgHandle = document.getElementById('categoryMsg');
+	var subCatMsgHandle = document.getElementById('subCatMsg');
+	var releaseDateMsgHandle = document.getElementById('dateMsg');
+	var stockMsgHandle = document.getElementById('stockMsg');
+	var imageMsgHandle = document.getElementById('imageMsg');
+	var desMsgHandle = document.getElementById('desMsg');
 
-	nameHandle.addEventListener('blur',function(){
+
+	var priceFormatter = /^[0-9]*(?:\.\d{1,2})?$/;
+	var nameFormatter = /^[a-zA-Z ]*$/;
+	var stockFormatter = /^[0-9]*(?:\.\d{1,2})?$/;
+	var errors = {
+	name: false,
+	price: false,
+	net_price: false,
+	tax_id: false,
+	description: false,
+	stock: false,
+	release_date: false,
+	image_url: false,
+	category_id: false,
+	sub_cat_id: false
+	}
+
+	function validateName()
+	{
 		if(nameHandle.value == ""){
-			nameMsgHandle.innerHTML = "Can't be blank";
-		}else if (!nameformatter.test(nameHandle.value)){
+			nameMsgHandle.innerHTML = "Name Can't be blank";
+			errors.name = false;
+		}else if (!nameFormatter.test(nameHandle.value)){
 			nameMsgHandle.innerHTML = "Should contain only alphabets";
+			errors.name = false;
 		}else{
 			nameMsgHandle.innerHTML = "";
+			errors.name = true;
 		}
-	},false); 
-	priceHandle.addEventListener('blur',function(){
+	}
+	function validatePrice()
+	{
 		if(priceHandle.value ==""){
-			priceMsgHandle.innerHTML = "can't be blank";
+			priceMsgHandle.innerHTML = " Price can't be blank";
+			errors.price = false;
 		}else if (!priceFormatter.test(priceHandle.value)){
 			priceMsgHandle.innerHTML = "should contain only number";
+			errors.price = false;
 		}else if (priceHandle.value <= 0){
 			priceMsgHandle.innerHTML = "should be greater than 0";
+			errors.price = false;
 		}else {
 			priceMsgHandle.innerHTML = "";
+			errors.price = true;
 		}
+	}
+	function validateCatName()
+	{
+		if(categoryHandle.value == ""){
+			categoryMsgHandle.innerHTML = "Select Category";
+			errors.category_id = false;
+		}else{
+			categoryMsgHandle.innerHTML = "";
+			errors.category_id = true;
+		}
+	}
+	function validateSubCatName()
+	{
+		if(subCatHandle.value == ""){
+			subCatMsgHandle.innerHTML = "Select Sub Category";
+			errors.sub_cat_id = false;
+		}else{
+			subCatMsgHandle.innerHTML = "";
+			errors.sub_cat_id = true;
+		}
+	}
+	function validateDescription(){
+		if(desHandle.value == ""){
+			desMsgHandle.innerHTML = "Description con't be blank";
+			errors.description = false;
+		}else if(desHandle.value.length < 5){
+			desMsgHandle.innerHTML = "Description should be of length between 5 to 250 characters";
+			errors.description = false;
+		}else{
+			desMsgHandle.innerHTML = "";
+			errors.description = true;
+		}
+	}
+	function validateNetprice(){
+		if(netPriceHandle.value == ""){
+			netPriceMsgHandle.innerHTML = "Net price con't be blank";
+			errors.net_price = false;
+		}else{
+			netPriceMsgHandle.innerHTML = "";
+			errors.net_price = true;
+		}
+	}
+	function validateStock(){
+		if(stockHandle.value == ""){
+			stockMsgHandle.innerHTML = "Stock can't be blank";
+			errors.stock = false
+		}else if(!stockFormatter.test(stockHandle.value)){
+			stockMsgHandle.innerHTML = "Stock is not a number";
+			errors.stock = false;
+		}
+		else{
+			stockMsgHandle.innerHTML = "";
+			errors.stock = true;
+		}
+	}
+	function validateImageUrl(){
+		if(imageHandle.value == ""){
+			imageMsgHandle.innerHTML = "Image con't be blank";
+			errors.stock = false;
+		}else{
+			imageMsgHandle.innerHTML = "";
+			errors.image_url = true;
+		}
+	}
+	function validateReleaseDateTime(){
+		if(releaseDateHandle.value == ""){
+			releaseDateMsgHandle.innerHTML = "Release date con't be blank";
+			errors.release_date = false;
+		}else{
+			releaseDateMsgHandle.innerHTML = "";
+			errors.release_date = true;
+		}
+	}
+	function validateGst(){
+		if(gstHandle.value = ""){
+			gstMsgHandle.innerHTML = "Tax con't be blank";
+			errors.tax_id = false
+		}else{
+			gstMsgHandle.innerHTML = "";
+			errors.tax_id = true;
+		}
+	}
+
+	registrationForm.addEventListener('submit',function(e){
+		validateName();
+		validatePrice();
+		validateCatName();
+		validateSubCatName();
+		validateDescription();
+		validateImageUrl();
+		validateReleaseDateTime();
+		validateGst();
+		validateNetprice();
+		validateStock()
+		Object.values(errors).includes(false);
+		e.preventDefault();
 	},false);
 
+	gstHandle.addEventListener('change',function(){
+		if(gstHandle.value == "" ){
+			netPriceHandle.value = "";	
+		}else{
+		netPriceHandle.value = Number(priceHandle.value) + (Number(priceHandle.value * gstHandle.value) / 100);
+		}
+	},false)
+
+	priceHandle.addEventListener('change',function(){
+		if(gstHandle.value == "" ){
+			netPriceHandle.value = "";	
+		}else{
+		netPriceHandle.value = Number(priceHandle.value) + (Number(priceHandle.value * gstHandle.value) / 100);
+		}		
+	},false)
 </script>
 
 

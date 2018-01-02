@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
-	before_action :authenticate_user!, except: [:index, :show]
-	before_action :check_is_admin, except: [:index, :show]
+	before_action :authenticate_user!, except: [:index, :show,:find_sub_categories]
+	before_action :check_is_admin, except: [:index, :show,:find_sub_categories]
 	def index
 		@categories = Category.all
 		@categories = Category.paginate(:page => params[:page])
@@ -34,6 +34,11 @@ class CategoriesController < ApplicationController
 		@category = Category.find(params[:id])
 		@category.destroy
 		redirect_to categories_path
+	end
+
+	def find_sub_categories
+		@sub_categories = SubCategory.where('category_id = ?', params[:category_id])
+		render json: @sub_categories
 	end
 
 	private

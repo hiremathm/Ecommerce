@@ -1,12 +1,198 @@
-<br/>
+<!-- Search Bar  in in application.html.erb -->
 
- <% if user_signed_in? && current_user.is_admin %> 
-	<%= link_to "Add Product", new_product_path %>
-<% end %>
-<h1>Listing Products - <%= @products.length %> </h1>
+<td><div class="row content">
+    <div class="col-sm-2 sidenav">
+	    <ul class="nav nav-pills nav-stacked">
+	    	
+	    	<div id="categories">
+		 		<% Category.all.each do |category| %>
+		 		<%#= radio_button_tag "category", category.id %> 
+		 			<li><%= check_box_tag category.name, category.id %><label for="<%= category.name %>">
+		 			<%=category.name %></li></label>
+		 		<% end %>
+			</div>
+			<h4>Cod Eligible </h4>
+				<div>
+					<input type="checkbox" id="cod" > COD ELIGIBLE <br/>
+		     	</div>
+	     	<h4>By Price</h4>
+	    		<div id="price1"> < 100 </div>
+				<div id="price2"> 100 - 500 </div>
+				<div id="price3"> 500 + </div>
+			<h4>Select By</h4>
+				<div id="Low">Low to High</div>
+				<div id="High">High to Low</div>
+			<h4>Select By Range</h4>
+			<input type = "range" min = 0 max = 500  id = "start"/>
+		</ul>
+	</div>
+	 
+		<!-- <div class="container">    
+			<div class="row">
+				<div class="col-sm-4">
+  					<div class="panel panel-primary">
+  					<ul id="productsList">
+    					<% #@products.each do |product| %>
+    					<div class="panel-heading"><li><%#= link_to product.name, product_path(product.id)%></li></div>
+    					<div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
+    					<div class="panel-footer">Price : <%#= product.price  %> Stock : <%#= product.stock  %></div>
+  					</div>
+				</div>
+			</div>
+		</div>
+ -->
+<!-- ***************************************LISTING PRODUCTS************************************-->
 <%= will_paginate @products %>
-<ol>
+ <ul id="productsList">
     <% @products.each do |product| %>
-	  <li><%= link_to product.name, product_path(product.id)  %> - <%= product.description  %> - <%= product.price  %> - <%= product.stock  %> - <%= product.category_id  %> - <%= product.cod_eligible  %> - <%= product.release_date %></li>
-    <% end %>
-</ol>
+	   <li><%= link_to product.name, product_path(product.id)  %> <%#= product.description  %><%#= product.price  %>  <%#= product.stock  %> <%#= product.category_id  %> <%#= product.cod_eligible  %> <%#= product.release_date %></li>
+    <%end %>
+</ul>
+<!-- ************************************************************************************************ -->
+<script>
+	var categoriesHandle = document.getElementById('categories');
+	var categoryInputs = categoriesHandle.getElementsByTagName('input');
+	var productsListHandle = document.getElementById('productsList');
+	var searchHandle = document.getElementById('search');
+	var codHandle = document.getElementById('cod');
+	var LowHandle = document.getElementById('Low');
+	var HighHandle = document.getElementById('High');
+	var priceHandle1 = document.getElementById('price1');
+	var priceHandle2 = document.getElementById('price2');
+	var priceHandle3 = document.getElementById('price3');
+
+	function buildProductHtml(products){
+		productsList.innerHTML = "";
+		products.forEach(function(product){
+			var li = document.createElement('li');
+			var a = document.createElement('a');
+			var href = document.createAttribute('href');
+			href.value = `/products/${product.id}`;
+			a.setAttributeNode(href);
+			var text = document.createTextNode(product.name);
+			a.appendChild(text);
+			li.appendChild(a);
+			productsList.appendChild(li);
+		});
+	}
+	categoriesHandle.addEventListener('click', function(){
+		var categorySelected = [];
+		for(var i = 0; i < categoryInputs.length; i++){
+			if(categoryInputs[i].checked){
+				categorySelected.push(categoryInputs[i].value);
+			}
+		}
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', '../ajax/find_by_categories?category_ids=' + categorySelected.join(","));
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				buildProductHtml(JSON.parse(xhr.responseText));
+			}
+		}
+		xhr.send();
+	}, false);
+	codHandle.addEventListener('click', function(){
+			var xhr = new XMLHttpRequest();			xhr.open('GET', '../ajax/cod_eligible?cod=' + codHandle.checked);
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState == 4 && xhr.status == 200){
+						buildProductHtml(JSON.parse(xhr.responseText));
+					}
+			}
+			xhr.send()
+	}, false);
+	searchHandle.addEventListener('keyup', function(){
+			if(searchHandle.value.length >= 3){
+				var xhr = new XMLHttpRequest();
+				
+				xhr.open('GET', '../ajax/autocomplete?search=' + searchHandle.value);	
+				xhr.onreadystatechange = function(){
+					if(xhr.readyState == 4 && xhr.status == 200){
+						buildProductHtml(JSON.parse(xhr.responseText));
+					}
+				}
+				xhr.send()
+			}else if(searchHandle.value.length == ""){
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', '../ajax/autocomplete?search=');	
+				xhr.onreadystatechange = function(){
+					if(xhr.readyState == 4 && xhr.status == 200){
+						buildProductHtml(JSON.parse(xhr.responseText));
+					}	
+				}
+				xhr.send();
+			}
+	}, false);
+
+	LowHandle.addEventListener('click',function(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET','../ajax/by_price_asc?low=');
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState == 4 && xhr.status == 200 ){
+				buildProductHtml(JSON.parse(xhr.responseText));
+			}
+		}
+		xhr.send();
+	},false);
+
+	HighHandle.addEventListener('click',function(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET','../ajax/by_price_desc?high=');
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState == 4 && xhr.status == 200 ){
+				buildProductHtml(JSON.parse(xhr.responseText));
+			}
+		}
+		xhr.send();
+	},false);
+
+	priceHandle1.addEventListener('click',function(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET','../ajax/By_price_less_than_100?price=');
+		xhr.onreadystatechange = function()
+		{
+			if(xhr.readyState == 4 && xhr.status == 200)
+			{
+				buildProductHtml(JSON.parse(xhr.responseText));	  			
+			}
+		}
+		xhr.send();
+	},false);
+
+priceHandle2.addEventListener('click',function(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET','../ajax/By_price_between_100_to_500?price=');
+		xhr.onreadystatechange = function()
+		{
+			if(xhr.readyState == 4 && xhr.status == 200)
+			{
+				buildProductHtml(JSON.parse(xhr.responseText));	  			
+			}
+		}
+		xhr.send();
+	},false);
+	priceHandle3.addEventListener('click',function(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET','../ajax/By_price_greater_than_500?price=');
+		xhr.onreadystatechange = function()
+		{
+			if(xhr.readyState == 4 && xhr.status == 200)
+			{
+				buildProductHtml(JSON.parse(xhr.responseText));	  			
+			}
+		}
+		xhr.send();
+	},false);
+
+
+	var sliderHandle1 = document.getElementById('start');
+	sliderHandle1.addEventListener('input',function(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET','../ajax/By_slider?price=' + sliderHandle1.value);
+		xhr.onreadystatechange = function(){
+		 	if(xhr.readyState == 4 && xhr.status == 200){
+		 		buildProductHtml(JSON.parse(xhr.responseText));
+		 	}
+		 }
+	 	xhr.send();
+	},false)
+</script>

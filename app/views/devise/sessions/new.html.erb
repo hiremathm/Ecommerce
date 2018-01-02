@@ -7,8 +7,9 @@
   </div>
 
   <div class="field">
-    <%= f.label :password %><br />
+    <%= f.label :password %>(<a href='#' id="show">Show</a>)<br/>
     <%= f.password_field :password, autocomplete: "off" %>
+    <span id = "passwordError"></span>
   </div>
 
   <% if devise_mapping.rememberable? -%>
@@ -24,3 +25,24 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+
+<script>
+  var passwordHandle = document.getElementById('user_password');
+  
+  var passwordErrorHandle = document.querySelector('#passwordError')
+  
+  var showHandle = document.querySelector('#show');
+  var showToggle = true;
+  showHandle.addEventListener('click', function(e){
+    if(showToggle){
+      passwordHandle.setAttribute('type','text');
+      showHandle.innerHTML = 'Hide';
+      showToggle = false;
+    }else{
+      passwordHandle.setAttribute('type','password');
+      showHandle.innerHTML = 'show';
+      showToggle = true;
+    }
+    e.preventDefault();
+  },false);
+</script>

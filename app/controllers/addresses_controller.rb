@@ -13,7 +13,9 @@ class AddressesController < ApplicationController
 	
 		end
 	end
-
+	def contact
+		@contact = User.find(4);
+	end
 	private
 	def address_params
 		params[:address].permit(:details,:state,:city,:pincode,:landmork)

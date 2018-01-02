@@ -6,16 +6,19 @@
   <div class="field">
     <%= f.label :email %><br />
     <%= f.email_field :email, autofocus: true %>
+    <span id = "emailError"></span>
   </div>
 
   <div class="field">
     <label>Username </label> <br/>
-    <%= f.text_field :username %> 
+    <%= f.text_field :username %>
+    <span id = "nameError"></span> 
   </div>
 
   <div class="field">
     <%= f.label :mobile %><br/>
-    <%= f.text_field :mobile %> 
+    <%= f.text_field :mobile %>
+    <span id = "mobileError"></span> 
   </div>
 
   <div class="field">
@@ -32,11 +35,13 @@
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %><br />
     <%= f.password_field :password, autocomplete: "off" %>
+    <span id = "passwordError"></span>
   </div>
 
   <div class="field">
     <%= f.label :password_confirmation %><br />
     <%= f.password_field :password_confirmation, autocomplete: "off" %>
+    <span id = "confirmError"></span>
   </div>
 
   <div class="actions">
@@ -44,4 +49,40 @@
   </div>
 <% end %>
 
+<script>
+var emailFormat = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+
+  var emailHandle = document.getElementById('user_email');
+  var emailErrorHandle = document.getElementById('emailError');
+  function checkEmailAvailable(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET','../validation/check_email?email='+ emailHandle.value,false);
+    var returnValue;
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState == 4 && xhr.status == 200){
+        var result = JSON.parse(xhr.responseText);
+        if(result.can_use){
+          returnValue = false;
+        }else{
+          returnValue = true;
+        }
+      }
+    }
+    xhr.send();
+    return returnValue;
+  }
+
+  emailHandle.addEventListener('blur',function(){
+    if(emailHandle.value == ""){
+      emailErrorHandle.innerHTML = "cont be blank";     
+    }else if(!emailFormat.test(emailHandle.value)){
+      emailErrorHandle.innerHTML = "wrond format";
+    }else if(checkEmailAvailable()){
+      emailErrorHandle.innerHTML = " can't be used, already taken ";
+    }else{
+      emailErrorHandle.innerHTML = "you can use this mail id";
+    }
+  },false);
+  
+</script>
 <%= render "devise/shared/links" %>
