@@ -6,7 +6,9 @@ class Notification < ApplicationMailer
   #   en.notification.order_confirmation.subject
   #
   def order_confirmation(ord)
+  	#binding.pry
     @order = ord
     mail to: "#{ord.user.email}",  subject: "Your order has been confirmed - #{ord.order_number}"
+  	#binding.pry
   end
 end

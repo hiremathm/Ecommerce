@@ -10,6 +10,8 @@ class SubCategoriesController < ApplicationController
   # GET /sub_categories/1
   # GET /sub_categories/1.json
   def show
+    @sub_cat = SubCategory.find(params[:id])
+    @sub_category = Product.where('sub_cat_id = ?', @sub_cat.id)
   end
 
   # GET /sub_categories/new

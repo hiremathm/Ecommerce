@@ -1,16 +1,12 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @sub_category.name %>
-</p>
-
-<p>
-  <strong>Category:</strong>
-  <%= @sub_category.category_id %>
-</p>
-<% if user_signed_in? && current_user.is_admin %>
-            <td><%= link_to 'Edit', edit_sub_category_path(@sub_category) %></td>
-            <td><%= link_to 'Destroy', @sub_category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <%end%>
-<%= link_to 'Back', sub_categories_path %>
+<% if @sub_category.empty?%>
+	<p> No Products found</p>
+<% else %>
+	<% @sub_category.each do |product|%>
+		<li><%= link_to product.name, product %></li>
+	<%end%>
+<% end %>
+<%# if user_signed_in? && current_user.is_admin %>
+            <td><%#= link_to 'Edit', edit_sub_category_path(@sub_category) %></td>
+            <td><%#= link_to 'Destroy', @sub_category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <%#end%>
+<%#= link_to 'Back', sub_categories_path %>

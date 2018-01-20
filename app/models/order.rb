@@ -4,9 +4,6 @@ class Order < ActiveRecord::Base
  after_create :empty_user_cart_line_items
  after_create :send_order_confirmation_notification
 
-
-
-
  belongs_to :user
  has_many :order_line_items
 
@@ -17,8 +14,7 @@ class Order < ActiveRecord::Base
  		self.order_number = "DCT- #{Random.rand(100..1000)}"
  	end
  	def copy_cart_line_items_to_orders_line_items
- 		cart_line_items = CartLineItem.where('user_id = ?',self.user_id)
- 		
+ 		cart_line_items = CartLineItem.where('user_id = ?',self.user_id)		
  		order_total = 0
  		cart_line_items.each do |c| 
  		order_line_item = OrderLineItem.new
@@ -41,5 +37,6 @@ class Order < ActiveRecord::Base
 
 	def send_order_confirmation_notification
 		Notification.order_confirmation(self).deliver!
+		#binding.pry
 	end
 end

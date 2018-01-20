@@ -26,21 +26,31 @@
 			<input type = "range" min = 0 max = 500  id = "start"/>
 		</ul>
 	</div>
-	 
+  					<ul id="productsList">
+
+<!-- **************************************************************************************************** -->
 		<!-- <div class="container">    
 			<div class="row">
 				<div class="col-sm-4">
+  					<p class="text-justify" color= "black">
   					<div class="panel panel-primary">
-  					<ul id="productsList">
-    					<% #@products.each do |product| %>
-    					<div class="panel-heading"><li><%#= link_to product.name, product_path(product.id)%></li></div>
-    					<div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
+    					<%# @products.each do |product| %>
+    					<div class="panel-heading">
+    						<%#= link_to product.name, product_path(product.id)%>
+    					</div>
+    					<div class="panel-body">
+    						<img src="<%#= product.image_url%>" class="img-responsive" style="width:20%" alt="Image">
+    					</div>
     					<div class="panel-footer">Price : <%#= product.price  %> Stock : <%#= product.stock  %></div>
+    					<br/>
+    					<%# end %>
+
   					</div>
+  				</p>
 				</div>
 			</div>
-		</div>
- -->
+		</div> -->
+
 <!-- ***************************************LISTING PRODUCTS************************************-->
 <%= will_paginate @products %>
  <ul id="productsList">
@@ -158,7 +168,7 @@
 		xhr.send();
 	},false);
 
-priceHandle2.addEventListener('click',function(){
+	priceHandle2.addEventListener('click',function(){
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET','../ajax/By_price_between_100_to_500?price=');
 		xhr.onreadystatechange = function()
