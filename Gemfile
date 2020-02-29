@@ -6,10 +6,7 @@ gem 'pry'
 gem 'friendly_id', '~> 5.1.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
-gem 'sqlite3',group: :development
-group :production do
-   gem 'pg', '0.15.1'
-end
+gem 'pg', '0.15.1'
 #gem 'rails_12factor', group: :production
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets

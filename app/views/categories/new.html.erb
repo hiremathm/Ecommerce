@@ -1,2 +1,12 @@
 <h2> Add Category </h2>
-<%= render 'form' %>
+<%#= render 'form' %>
+
+
+<%= form_for @category do |f| %>
+
+	<label>Name</label><br/>
+	<%= f.text_field :name %><br/> 
+
+	<%= f.submit %>
+
+<% end %>

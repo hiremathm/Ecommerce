@@ -3,34 +3,34 @@
 
 	<label>Name</label><br/>
 	<%= f.text_field :name %><br/> 
-	<span id = 'nameError'></span></br>
 
 	<%= f.submit %>
 
 <% end %>
+<!--
 <script>
 	// var registerForm = document.getElementById('new_category');
-	var nameHandle = document.getElementById('category_name');
+	// var nameHandle = document.getElementById('category_name');
 
-	var nameErrorHandle = document.getElementById('nameError');
+	// var nameErrorHandle = document.getElementById('nameError');
 
 	// var errors = {
 		// name: false
 	// }
 	// function validateName()
-	nameHandle.addEventListener('click',function()
-	{
-		if(nameHandle.value == ""){
-			nameErrorHandle.innerHTML = " cont be blank ";
-			// errors.name = false;
-		}else if(nameHandle.value.length < 5){
-			nameErrorHandle.innerHTML = " Name should be greater than of length 5"
-			// errors.name = false;
-		}else{
-			nameErrorHandle.innerHTML = "";
-			// errors.name = true;
-		}
-	},false);
+	// nameHandle.addEventListener('click',function()
+	// {
+	// 	if(nameHandle.value == ""){
+	// 		nameErrorHandle.innerHTML = " cont be blank ";
+	// 		// errors.name = false;
+	// 	}else if(nameHandle.value.length < 5){
+	// 		nameErrorHandle.innerHTML = " Name should be greater than of length 5"
+	// 		// errors.name = false;
+	// 	}else{
+	// 		nameErrorHandle.innerHTML = "";
+	// 		// errors.name = true;
+	// 	}
+	// },false);
 
 	// registerForm.addEventListener('submit',function(e){
 	// 	validateName();
@@ -39,3 +39,5 @@
 	// },false);
 
 </script>
+
+-->
