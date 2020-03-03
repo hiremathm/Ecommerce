@@ -1,12 +1,14 @@
 source 'https://rubygems.org'
+ruby '2.4.1'
+
 gem 'will_paginate', '~> 3.1.0'
 gem 'devise'
 gem 'faker'
 gem 'pry'
 gem 'friendly_id', '~> 5.1.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.6'
-gem 'sqlite3',group: :development
+gem 'rails', '4.2.8'
+gem 'sqlite3', '~> 1.3.6'
 group :production do
    gem 'pg', '0.15.1'
 end

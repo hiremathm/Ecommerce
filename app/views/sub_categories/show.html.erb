@@ -1,12 +1,34 @@
-<% if @sub_category.empty?%>
-	<p> No Products found</p>
+<% if @sub_category_items.empty?%>
+	<p> No Sub Category found</p>
 <% else %>
-	<% @sub_category.each do |product|%>
-		<li><%= link_to product.name, product %></li>
-	<%end%>
+	<div class="category">
+		<% @sub_category_items.each do |item|%>
+			<div class="card">
+				<div class="card-header"><%= item.name%></div>
+				<div class="card-body">
+					<%products = Product.where(sub_cat_id: 2)%>
+						<div class="row">
+							<%products.each do |p|%>
+								<div class="col-md-3">
+									<img src="<%= p.image_url%>"><br/>
+									<span style="font-size: 12px"><%= p.name%></span>
+								</div>
+							<%end%>
+					</div>			
+				</div>
+			</div>
+		<%end%>
+	</div>
 <% end %>
-<%# if user_signed_in? && current_user.is_admin %>
-            <td><%#= link_to 'Edit', edit_sub_category_path(@sub_category) %></td>
-            <td><%#= link_to 'Destroy', @sub_category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <%#end%>
-<%#= link_to 'Back', sub_categories_path %>
+
+
+<style type="text/css">
+	.card {
+		height: 350px;
+		padding: 10px; 
+	}
+	img {
+		width: 200px;
+		height: 200px;
+	}
+</style>

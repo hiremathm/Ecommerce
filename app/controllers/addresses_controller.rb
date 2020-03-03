@@ -14,7 +14,7 @@ class AddressesController < ApplicationController
 		end
 	end
 	def contact
-		@contact = User.find(4);
+		@contact = User.first;
 	end
 	private
 	def address_params

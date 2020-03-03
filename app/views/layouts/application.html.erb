@@ -7,60 +7,66 @@
   <%= csrf_meta_tags %>
 
   <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
 
 <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 
-<nav class="navbar navbar-inverse">
+<!-- <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
       <ul class="nav navbar-nav">
-      <% if !user_signed_in? %>
+      <%# if !user_signed_in? %>
         <li class="dropdown" style="font-size: 20px" ><a class="dropdown-toggle" data-toggle="dropdown">eCommerce</a>
-      <% end %>
+      <%# end %>
   
-      <% if user_signed_in? && !current_user.is_admin %>
+      <%# if user_signed_in? && !current_user.is_admin %>
         <li class="dropdown" style="font-size: 20px" ><a class="dropdown-toggle" data-toggle="dropdown">eCommerce</a>
-      <% end %>
-      <% if user_signed_in? && current_user.is_admin %>
+      <%# end %>
+      <%# if user_signed_in? && current_user.is_admin %>
         <li class="dropdown" style="font-size: 20px" ><a class="dropdown-toggle" data-toggle="dropdown">eCommerce<span class="caret"></span></a>
           <ul class="dropdown-menu">
-              <li><%= link_to "Add Product", new_product_path %></li>
-              <li><%= link_to "Add Category", new_category_path %></li>
-             <li><%= link_to "Add SubCategory", new_sub_category_path%></li>
+              <li><%#= link_to "Add Product", new_product_path %></li>
+              <li><%#= link_to "Add Category", new_category_path %></li>
+             <li><%#= link_to "Add SubCategory", new_sub_category_path%></li>
           </ul>
         </li>
-      <% end %>
+      <%# end %>
     </ul>
   </div>
 
   <ul class="nav navbar-nav"> 
-      <li style="font-size: 16px;"><%= link_to "Shop Now", products_path %></li>
+      <li style="font-size: 16px;"><%#= link_to "Shop Now", products_path %></li>
   </ul>   
   <ul class="nav navbar-nav navbar-right">
-    <li style="font-size: 16px "><%= link_to "Contact", addresses_contact_path %></li>  
+    <li ><%#= link_to "Contact", addresses_contact_path %></li>  
     <li style="font-size: 16px"><a href="/cart_line_items"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
-    <li style="font-size: 16px"><%= link_to "Orders", orders_path %></li>
-  <!-- </ul> -->
-  <% if user_signed_in? %>
+    <li style="font-size: 16px"><%#= link_to "Orders", orders_path %></li>
+  <! </ul> -->
+  <%# if user_signed_in? %>
   <!-- <ul class="nav navbar-nav">  -->
-    <li class="dropdown" style="font-size: 16px" ><a class="dropdown-toggle" data-toggle="dropdown">Account<span class="caret"></span></a>
+   <!--  <li class="dropdown" style="font-size: 16px" ><a class="dropdown-toggle" data-toggle="dropdown">Account<span class="caret"></span></a>
       <ul class="dropdown-menu">
-        <li><%= link_to "Profile", edit_user_registration_path %></li>
-        <li><%= link_to "Add Address", addresses_path%></li>
-        <li><%= link_to "Logout", destroy_user_session_path, method: :delete %></li>
+        <li><%#= link_to "Profile", edit_user_registration_path %></li>
+        <li><%#= link_to "Add Address", addresses_path%></li>
+        <li><%#= link_to "Logout", destroy_user_session_path, method: :delete %></li>
       </ul>
-    </li>
+    </li> -->
   <!-- </ul> -->
-  <% else %>
-    <ul class="nav navbar-nav navbar-right">
+  <%# else %>
+<!--     <ul class="nav navbar-nav navbar-right">
       <li><a href="/users/sign_in">Sign In<span class="glyphicon glyphicon-user"></span></a></li>
       <li><a href="/users/sign_up">Sign Up<span class="glyphicon glyphicon-log-in"></span></a></li>
     </ul>
-  <% end %>
+  <%# end %>
   </ul>
   </div>
 </nav>
@@ -76,33 +82,253 @@
           </div>
       </div>
     </center>
-  </form>
-</nav>
-<nav class="navbar" style="background-color: #ffa100">
-  <ul class="nav navbar-nav ">
-  <li><%= link_to "Home", products_path %></li>
-  <% Category.all.each do |category| %>
-    <li class="dropdown" style="font-size: 16px"><a class="dropdown-toggle" data-toggle="dropdown"><%= category.name%>
-      <span class="caret"></span>
-      <ul class = "dropdown-menu">
-        <% category.sub_categories.each do |category| %>
-          <li style="font-size: 12px"> <%= link_to category.name, sub_category_path(category.id) %></li>
-        <%end%>
-      </ul>
-    </li>
+  </form> -->
+<!-- </nav> -->
+<!-- <nav class="navbar" style="background-color: #ffa100"> -->
+  <!-- <ul class="nav navbar-nav "> -->
+  <!-- <li><%#= link_to "Home", products_path %></li> -->
+  <%# Category.all.each do |category| %>
+    <!-- <li class="dropdown" style="font-size: 16px"><a class="dropdown-toggle" data-toggle="dropdown"><%#= category.name%> -->
+      <!-- <span class="caret"></span> -->
+      <!-- <ul class = "dropdown-menu"> -->
+        <%# category.sub_categories.each do |category| %>
+          <!-- <li style="font-size: 12px"> <%#= link_to category.name, sub_category_path(category.id) %></li> -->
+        <%#end%>
+      <!-- </ul> -->
+    <!-- </li> -->
+  <%# end %>
+  <!-- </ul> -->
+<!-- </nav> -->
+<%# if notice %>
+  <!-- <div class = "alert alert-success"> -->
+    <%#= notice %>
+  <!-- </div> -->
+<%# end %>
+<%# if alert %>
+  <!-- <div class = "alert alert-warning"> -->
+    <%#= alert %>
+  <!-- </div> -->
+<%# end %>
+  
+  <nav class="navbar navbar-expand-sm bg-primary">
+    <ul class="navbar-nav">
+      <% if user_signed_in? && !current_user.is_admin %>
+        <li class="dropdown eCommerce"><a class="dropdown-toggle" data-toggle="dropdown">eCommerce</a>
+      <%else%>
+       
+      <% if user_signed_in? && current_user.is_admin %>
+        <li class="dropdown eCommerce"><a class="dropdown-toggle" data-toggle="dropdown">eCommerce<span class="caret"></span></a>
+          <ul class="dropdown-content">
+              <li><%= link_to "Add Product", new_product_path %></li>
+              <li><%= link_to "Add Category", new_category_path %></li>
+             <li><%= link_to "Add SubCategory", new_sub_category_path%></li>
+          </ul>
+        </li>
+      <% end %>
+      <%end %>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right"> 
+      <li id = "products_path"><%= link_to "ShopNow", products_path %></li>
+    </ul>   
+    <ul class="navbar-nav navbar-right" id="paths">
+      <li id = "addresses_path"><%= link_to "Contact", addresses_contact_path %></li>  
+      
+      <li id = "orders_path"><%= link_to "My Orders", orders_path %></li>
+      <li id = "cart_item_path"><a href="/cart_line_items"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
+    </ul>
+
+  <% if user_signed_in? %>
+  <div class="dropdown">
+    <div class="dropbtn">Account</div>
+    <div class="dropdown-content">
+      <%= link_to "Profile", edit_user_registration_path %>
+      <%= link_to "Add Address", addresses_path%>
+      <%= link_to "Logout", destroy_user_session_path, method: :delete %>    
+    </div>
+  </div>
+  <% else %>
+    <ul class="nav navbar-nav navbar-right signin_and_signup">
+      <li id = "signin"><a href="/users/sign_in">Sign In<span class="glyphicon glyphicon-user"></span></a></li>
+      <li id = "signup"><a href="/users/sign_up">Sign Up<span class="glyphicon glyphicon-log-in"></span></a></li>
+    </ul>
   <% end %>
-  </ul>
-</nav>
-<% if notice %>
-  <div class = "alert alert-success">
-    <%= notice %>
-  </div>
-<% end %>
-<% if alert %>
-  <div class = "alert alert-warning">
-    <%= alert %>
-  </div>
-<% end %>
-<%= yield %>
+  </nav>
+  <nav class="navbar navbar-expand-sm second_navbar">
+    <ul class="navbar-nav">
+      <%Category.all.limit(8).each do |category|%>
+        <div class="dropdown category">
+          <div class="dropdown-toggle category_dropdown" id="navbarDropdownMenuLink"  aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" data-hover="dropdown">
+            <%=category.name.capitalize%>
+          </div>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <%SubCategory.where(category_id: category.id).each do |subcategory|%>
+              <div class="subcategory"><a href="/sub_categories/<%= subcategory.id%>"><%= subcategory.name.capitalize%></a></div>
+            <%end%>            
+          </div>
+        </div>
+      <%end%>
+    </ul>
+  </nav>
+  <%= yield %>
 </body>
 </html>
+
+
+<style type="text/css">
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+  .subcategory {
+    margin-top: 8px;
+    font-size: 12px;
+    width: 100%;
+    font-style: normal;
+    margin-left: 20px;
+  }
+
+  .subcategory a {
+    color: blue;
+    text-decoration: none;
+  }  
+  .subcategory a:hover {
+    color: blue;
+    text-decoration: none;
+  }
+
+  .no-items-found {
+    width: 100px;
+  }
+  .second_navbar {
+    background-color: white;
+    
+  }
+
+  #products_path {
+    font-size: 20px;
+    color: white;
+    margin-left: 20px;
+  }
+  #paths {
+    margin-left: 50%;
+  }
+  #orders_path, #cart_item_path {
+    margin-left: 10px;
+  }
+
+  .product-dropdown {
+    font-size: 12px;
+    padding: 10px;
+  }
+  .category_dropdown {
+    margin-left: 60px;
+  }
+
+  .eCommerce {
+    color: white;
+    font-size: 20px;
+  }
+  .noproducts {
+    height: 35px;
+    width: 200px;
+    margin-left: 60px;
+  }
+
+
+  .category .dropdown-content a{
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding-top: 10px;
+    font-size: 12px;
+  }
+
+  .category .dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    margin-left: -100px;
+    background-color: white;
+  }
+
+
+  .eCommerce .dropdown-content a{
+    color: blue;
+    text-decoration: none;
+    display: block;
+    padding-top: 10px;
+    font-size: 16px;
+    min-width: 125px;
+  }
+
+  .eCommerce .dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    margin-left: -30px;
+    background-color: white;
+  }
+
+
+  a {
+    color: white;
+  }
+
+  a:hover {
+    color: white;
+  }
+
+  .signin_and_signup {
+    margin-left: 10%;
+  }
+
+  .signin_and_signup:hover {
+    color: block;
+  }
+  #signup {
+    margin-left: 10px;
+  }
+
+  .dropbtn {
+    padding: 8px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    margin-left: 120px;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown:hover .dropdown-content {
+    padding-top: 1px;
+    margin-top: 1px;
+  }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    z-index: 1;
+    margin-left: 120px;
+    background-color: white;
+  }
+
+  .dropdown-content a {
+    color: blue;
+    padding: 4px 4px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-content a:hover {background-color: block}
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  .navbar {
+    height: 40px;
+  }
+</style>
