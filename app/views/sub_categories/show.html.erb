@@ -1,19 +1,23 @@
 <% if @sub_category_items.empty?%>
 	<p> No Sub Category found</p>
 <% else %>
-	<div class="category">
+	<div class="category_item">
 		<% @sub_category_items.each do |item|%>
-			<div class="card">
-				<div class="card-header"><%= item.name%></div>
-				<div class="card-body">
-					<%products = Product.where(sub_cat_id: 2)%>
+			<div class="sub_cat_list">
+				<div class="header"><%= item.name%></div>
+				<div class="card-body1">
+					<%products = Product.where(sub_cat_id: item.id)%>
 						<div class="row">
 							<%products.each do |p|%>
-								<div class="col-md-3">
+								<div class="col-md-3" class="product">
 									<img src="<%= p.image_url%>"><br/>
-									<span style="font-size: 12px"><%= p.name%></span>
+									<center>
+									<span style="font-size: 12px;"><a href="/products/<%= p.id%>" style="color: blue;"><%= p.name%></a></span><br/>
+									<span class="just">Just ₹ <%= p.price%></span><br/>
+									<span class="price">₹ <%= p.price%>    <s class="more_price"><%= p.price + 500%></s></span>
+									</center>
 								</div>
-							<%end%>
+							<%end%>	
 					</div>			
 				</div>
 			</div>
@@ -23,12 +27,29 @@
 
 
 <style type="text/css">
-	.card {
+	.category_item {
+		background-color: #BDC3C7;
+		margin-top: 10px;
+	}
+	.sub_cat_list {
 		height: 350px;
-		padding: 10px; 
+		padding: 10px;
+		margin-top: 50px;
+		margin: 10px; 
+		background-color: white;
 	}
 	img {
 		width: 200px;
 		height: 200px;
 	}
+	.just {
+		color: green;
+	}
+	.more_price {
+		font-weight: normal;
+	}
+	.price {
+		font-weight: bold;
+	}
+
 </style>

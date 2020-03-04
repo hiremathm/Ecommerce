@@ -36,7 +36,7 @@ class Order < ActiveRecord::Base
 	end
 
 	def send_order_confirmation_notification
-		Notification.order_confirmation(self).deliver!
+		# Notification.order_confirmation(self).deliver!
 		#binding.pry
 	end
 end

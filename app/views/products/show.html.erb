@@ -1,81 +1,198 @@
-<h2><%= @product.name %><%=@product.code%></h2>
-<img src="<%=@product.image_url %>" style="width:200px;height:100px;">
+<div class="row">
+	<div class="col-sm-4">
+		<div class="image_block">
+			<img src="<%= @product.image_url%>" width="450px" height="360px">
+		</div>
+	</div>
+	<div class="col-sm-8">
+		<div class="info_block">
+			<span class="product_name"><%= @product.name%></span><br/><br/>
+			<span class="rating">Rating : 3.6</span><br/><br/>
+			<span class="price"> ₹<%= @product.price%></span><s class="normal_price">₹<%= @product.price * 10/ 100 %></s> <span class="off">10% off</span><br/>
+			<span class="stock">
+				Hurry, Only <%= @product.stock%> left! 
+			</span><br/><br/>
+			<span class="spec_head">Specifications</span><br/>
+			<span class="specification_block">
+				<%= @product.description%>
+			</span>
+		</div>
+		
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-4 buy_now_or_add_to_cart">
+		<% if user_signed_in? && @product.stock > 0 %>		
+			<%= form_for @cart_line_item do |f|%>
+				<%= f.hidden_field :product_id, value: @product.id %>
+				<%= f.hidden_field :quantity, value: 1 %>
+				<br/>
+				<%= f.submit "Add to cart", class: "btn btn-warning" %>
+				<a class="btn buy_now " href="#">Buy Now</a>
+			<% end %>
+		<%else%>
+			<b>You need to register before buying</b>
+		<%end%>
+	</div>		
+</div>
+
+
+<style type="text/css">
+	.row {
+		background-color: #F7F9F9;
+	}
+	.cart_line_item_quantity {
+		background-color: red;
+	}
+	.btn {
+		width: 210px;
+	}
+	.buy_now {
+		background-color: #FF5733;
+	}
+	.quantity {
+		width: 100px;
+	}
+	.buy_now_or_add_to_cart {
+		margin-left: 23px;
+		margin-bottom: 10px;
+		height: 100px;
+		background-color: white;
+	}
+	.image_block {
+		margin: 8px;
+		background-color: white;
+	}
+	.specification_block {
+		/*padding-left: 20px;*/
+		margin-top: 40px;
+		text-align: center;
+	}
+	.spec_head {
+		font-size: 22px;
+		/*padding-left: 20px;*/
+		font-weight: bold;
+	}
+	.info_block {
+		margin: 8px;
+		background-color: white;
+		height: 360px;
+		padding-left: 20px;
+	}
+	.product_name {
+		/*padding: 20px;*/
+		font-size: 25px;
+		font-weight: bold;
+	}
+	.stock {
+		font-size: 14px;
+		/*padding: 20px;*/
+		color: #E74C3C;
+	}
+	.price {
+		/*padding-left: 20px;*/
+		color: #17202A;
+		font-size: 25px;
+		font-weight: bold;
+	}
+	.normal_price {
+		color: #17202A;
+		font-size: 16px;
+		padding-left: 10px;
+		font-weight: normal;
+	}
+
+	.rating{
+		/*padding: 20px;*/
+		font-size: 18px;
+		color: red;
+	}
+
+	.off {
+		color: green;
+		font-weight: bold;
+	}
+</style>
+<!--
+  lists = CatalogList.all
+	lists.collect {|k| k  if k.sou.include? "jdkflsd"}.count
+<h2><%#= @product.name %><%#=@product.code%></h2>
+<img src="<%#=@product.image_url %>" style="width:200px;height:100px;">
 
 					
-<p> INR <%= @product.price%></p>
-<p> Category - <%= link_to @product.category.name, category_path(@product.category_id)%> </p>
-<p> Description <%= @product.description %> </p>
+<p> INR <%#= @product.price%></p>
+<p> Category - <%#= link_to @product.category.name, category_path(@product.category_id)%> </p>
+<p> Description <%#= @product.description %> </p>
+
+<%# if user_signed_in? && @product.stock > 0 %>
+<h2>Buy Now</h2>
+
+	<%#= form_for @cart_line_item do |f|%>
+		<%#= f.hidden_field :product_id, value: @product.id %>
+		<%#= f.label :quantity %> 
+		<%#= f.select :quantity, (1..10).to_a %> <br/>
+		<%#= f.submit "Add to cart" %>
+	<%# end %>
+<%#else%>
+	<b>You need to register before buying</b>
+<%#end%>
+
+<h2> Listing Review<%#= @product.reviews.length %></h2>
+<%# if @product.reviews.empty? %>
+<b>No reviews found. be the first to add a review.</b>
+<%# else %>
+
+<ul>
+	<%# @product.reviews.each do |review|%>
+		<li id = "reviewList"><%#= review.title %> - <%#= review.rating %>
+			<%# if user_signed_in? && (review.user_id == current_user.id || current_user.is_admin)%>
+			<%#= link_to "remove", review_path(review.id), method: :delete, data: {confirm: "are you sure"}, remote: true %>
+			<%# end %>
+		</li>
+	<%# end %>
+</ul>
+<%# end %>
 
 
-<!-- *********************************buy now ****************************** -->
-
-	<% if user_signed_in? && @product.stock > 0 %>
-	<h2>Buy Now</h2>
-
-		<%= form_for @cart_line_item do |f|%>
-			<%= f.hidden_field :product_id, value: @product.id %>
-			<%= f.label :quantity %> 
-			<%= f.select :quantity, (1..10).to_a %> <br/>
-			<%= f.submit "Add to cart" %>
-		<% end %>
-	<%else%>
-		<b>You need to register before buying</b>
-	<%end%>
-<!-- *************************************listing reviews -->
-<h2> Listing Review<%= @product.reviews.length %></h2>
-<% if @product.reviews.empty? %>
-	<b>No reviews found. be the first to add a review.</b>
-<% else %>
-	
-	<ul>
-		<% @product.reviews.each do |review|%>
-			<li id = "reviewList"><%= review.title %> - <%= review.rating %>
-				<% if user_signed_in? && (review.user_id == current_user.id || current_user.is_admin)%>
-				<%= link_to "remove", review_path(review.id), method: :delete, data: {confirm: "are you sure"}, remote: true %>
-				<% end %>
-			</li>
-		<% end %>
-	</ul>
-<% end %>
-<!-- ********************************review*********************************** -->
 <span id = "errors">
 	
 </span>
 <h2> Add Review </h2>
-<%= form_for(@review,remote: true) do |f| %>
+<%#= form_for(@review,remote: true) do |f| %>
 
-	<%= f.hidden_field :product_id, value:@product.id %>
+	<%#= f.hidden_field :product_id, value:@product.id %>
 	<div>
 		<label>Title</label><br/>
-		<%= f.text_field :title %><br/>
+		<%#= f.text_field :title %><br/>
 		<span id = "titleError"></span>
 	</div>
 	<div>
 		<label>Description</label><br/>
-		<%=f.text_field :description %><br/>
+		<%#=f.text_field :description %><br/>
 		<span id = "desError"></span> 
 	</div>
 	<div>
 		<label>Rating : </label><br/>
-		<%=f.radio_button :rating, 1 %> 1
-		<%=f.radio_button :rating, 2 %> 2
-		<%=f.radio_button :rating, 3 %> 3
-		<%=f.radio_button :rating, 4 %> 4
-		<%=f.radio_button :rating, 5 %> 5<br/>
+		<%#=f.radio_button :rating, 1 %> 1
+		<%#=f.radio_button :rating, 2 %> 2
+		<%#=f.radio_button :rating, 3 %> 3
+		<%#=f.radio_button :rating, 4 %> 4
+		<%#=f.radio_button :rating, 5 %> 5<br/>
 		<span id ="ratingError"></span>
-		<%= f.submit "Add Review" %>
+		<%#= f.submit "Add Review" %>
 	</div>
 
-<% end %>
+<%# end %>
 
-<% if user_signed_in? && current_user.is_admin %>
-	<%= link_to "edit",edit_product_path(@product.id) %> |<%= link_to "destroy",product_path(@product.id),method: :delete, data: {confirm: "are you sure"} %>
-<% end %>
+<%# if user_signed_in? && current_user.is_admin %>
+	<%#= link_to "edit",edit_product_path(@product.id) %> |<%#= link_to "destroy",product_path(@product.id),method: :delete, data: {confirm: "are you sure"} %>
+<%# end %>
 <p><font color="red" >login to add review</font></p>
-<%= link_to "back", :back %>
+<%#= link_to "back", :back %>
 
-
-<script>
+-->
+<!-- <script>
 	reviewForm = document.getElementById('new_review')
 
 	var errors = {
@@ -129,3 +246,4 @@
 		}
 	},false);
 </script>
+ -->
