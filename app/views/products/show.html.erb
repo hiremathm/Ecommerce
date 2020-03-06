@@ -28,7 +28,7 @@
 				<%= f.hidden_field :product_id, value: @product.id %>
 				<%= f.hidden_field :quantity, value: 1 %>
 				<br/>
-				<%= f.submit "Add to cart", class: "btn btn-warning" %>
+				<%= f.submit "Add to cart", class: "btn btn-warning add_to_cart" %>
 				<a class="btn buy_now " href="#">Buy Now</a>
 			<% end %>
 		<%else%>
@@ -50,9 +50,13 @@
 	}
 	.buy_now {
 		background-color: #FF5733;
+		border-radius: 0px;
 	}
 	.quantity {
 		width: 100px;
+	}
+	.add_to_cart {
+		border-radius: 0px;
 	}
 	.buy_now_or_add_to_cart {
 		margin-left: 23px;

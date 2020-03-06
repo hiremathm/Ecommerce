@@ -1,7 +1,8 @@
 class CartLineItemsController < ApplicationController
 	before_action :authenticate_user!
 	def index
-		@cart_line_items = current_user.cart_line_items
+		@cart_line_items = current_user.cart_line_items.group_by(&:product_id)
+		@total_quantity =  current_user.cart_line_items.map(&:quantity).inject(:+)
 		@order = Order.new
 		@addresses = current_user.addresses
 	end
