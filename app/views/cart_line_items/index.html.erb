@@ -8,7 +8,7 @@
 	<div class="row">
 		<div class="col-sm-8">
 			<div class="myCart">
-				<span class="cartItems">My Cart (<%= @total_quantity %>)</span>
+				<span id="cart_items">My Cart (<%= @total_quantity %>)</span>
 				<%delivery_fee = 0%>
 				<select value="" class="form-control" id="address_list">
 					<% @addresses.each do |address|%>
@@ -27,19 +27,25 @@
 						<%price = product.price * quantity%>
 						<%total_price += price%>
 						<%total_quantity += quantity%>
+						<%day = Random.rand(1..10)%>
+						<% delivery_amount = Random.rand(100..200)%>
+						<%delivery_fee += day > 3 ?  0 : delivery_amount%>
+						<div id="quantity_price" value="<%=value[0]["id"]%>|<%=quantity%>|<%= delivery_fee%>"></div>
+					
+
 						<tr>
 							<div class="row">
 								<div class="col-sm-2"><img class="image" src="<%= product.image_url %>" width="180px" height="150px"/></div>
 								<div class="col-sm-6 name"><%= product.name %><br/><br/>
 								<span class="seller">Seller: Retailer</span>	<br/>
-								<span class="price"> ₹<%= price%></span>   <s class="normal_price"> ₹<%= price * 10/ 100 %></s> <span class="off">10% Off   <span class="offers">4 Offers available</span></span><br/></div>
-								<div class="col-sm-4 delivery_day">Delivery In <%day = Random.rand(1..10)%> <%= day %> days, <%= (Date.today + day.days).strftime('%A').slice(0,3)%> | <span class="free"><% delivery_amount = Random.rand(100..200)%><%if day < 3 %>free <s>₹<%=delivery_amount %></s><%else%>fee ₹<%= delivery_amount %><%delivery_fee += delivery_amount%><%end%><span></div>
+								<span id="price"> ₹<%= price%></span>   <s class="normal_price"> ₹<%= price * 10/ 100 %></s> <span class="off">10% Off   <span class="offers">4 Offers available</span></span><br/></div>
+								<div class="col-sm-4 delivery_day">Delivery In  <%= day %> days, <%= (Date.today + day.days).strftime('%A').slice(0,3)%> | <span class="free"><%if day > 3 %>free <s>₹<%=delivery_amount %></s><%else%>fee ₹<%= delivery_amount %><%end%><span></div>
 							</div>
 							<div class="row actions">
 								<div class="col-sm-3">
-									<button class="plus">+</button>
-									<button class="quantity"><%= quantity%></button> 
-									<button class="minus">-</button>
+									<button id="minus">-</button>
+									<button id="quantity" value="<%= quantity%>"><%= quantity%></button> 
+									<button id="plus">+</button>
 								</div>
 								<div class="col-sm-4 ">
 									<a href="#" class="save_for_later">SAVE FOR LATER</a>
@@ -60,23 +66,20 @@
 			<span class="price_details">
 				PRICE DETAILS
 			</span>
-			<hr/>
 
-			<div class="price_receipt">
-				Price (<%= total_quantity%> <%= total_quantity > 1 ? "items" : "item"%>)  <span class="total_price">₹<%= total_price%>
+			<div id="price_receipt">
+				<table class="table" >
+					<thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead>
+					<tbody><tr><td><%= total_quantity%></td><td>₹<%= total_price%></td><td id="delivery_charge"><%if delivery_fee == 0 %>Free<%else%>₹<%= delivery_fee%><%end%></td></tr></tbody>
+				</table>
 			</span>
 			</div>
-
-			<div class="price_receipt">
-				Delivery fee <span class="delivery_fee"><%if delivery_fee == 0 %>Free<%else%>₹<%= delivery_fee%><%end%></span>
-			</div>
-			<hr/>
-			<div class="total_payable">
+			<div id="total_payable">
 				Total Payble 	<span class="total_amount">₹<%= total_price + delivery_fee%></span>	
 			</div>
 			<div class="place_order">
 				<%= form_for @order do |f| %>
-						<%= f.hidden_field :address_id, :value =>:address_id, class: "address_id" %> addresss
+						<%= f.hidden_field :address_id, :value =>:address_id, class: "address_id" %>
 	 				<%= f.submit "PLACE ORDER", class: "btn btn-lg place_order" %>
 				<% end %>
 			</div>
@@ -86,16 +89,81 @@
 </body>
 </html>
 <script type="text/javascript">
-	const address_list = document.getElementById('address_list')
-	const address_id = document.getElementById('address_id')
+	// add address id
+	var address_list = document.getElementById('address_list')
+	var address_id = document.getElementById('address_id')
+	var priceReceiptHandle = document.getElementById('price_receipt')
+	var totalPriceHandle = document.getElementById('total_price')
+	var totalPaybleHandle = document.getElementById('total_payable')
+	var deliveryChargeHandle = document.getElementById('delivery_charge')
+
 	address_list.addEventListener('change', function(){
 		address_id.value = address_list.value	
 	})
 	
+	// send cart id , and quantity
+	var plus = document.getElementById('plus')
+	var minus = document.getElementById('minus')
+	var quantity_price = document.getElementById('quantity_price')
+	var quantityHandle  = document.getElementById('quantity')
+	var priceHandle  = document.getElementById('price')
+	var cartitemHandle = document.getElementById('cart_items')
+	var str = quantity_price.getAttribute("value")
+	var id = str.split('|')[0]
+	var quantity = Number(str.split('|')[1])
+	var delivery_price = Number(str.split('|')[2])
+	var total_delivery_price = 'Free'
+	if(delivery_price > 0)
+	{
+		total_delivery_price = "₹"+delivery_price
+	}
+	plus.addEventListener('click', function(){
+		if(quantity > 0){
+			$.post("/increase_quantity",{
+				id: id,quantity: quantity
+			},
+			function(data){
+
+				var t = "" 
+				if(data['quantity'] > 1){
+					t = ' items'
+				}else{
+					t = ' item'
+				}				
+				var cartItemText = "My Cart ("+data["quantity"]+")"
+				var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['quantity']+'</td><td>₹'+data['price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
+				
+				priceReceiptHandle.innerHTML = table;
+				cartitemHandle.innerHTML = cartItemText
+				quantityHandle.innerHTML = data["quantity"];
+				priceHandle.innerHTML = "₹"+data["price"];
+				totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['price']+'</span>'
+			});
+		}
+	}) 
+	minus.addEventListener('click', function(){
+		if(!(quantity <= 0)){
+		$.post("/decrease_quantity",{
+			id: id,quantity: quantity
+		},
+		function(data){
+			console.log("response: ", data);
+			quantityHandle.innerHTML = data["quantity"];
+			priceHandle.innerHTML = "₹"+data["price"];
+		});}
+	})
+
+	//disable quantity 
+	var quantity_value = quantityHandle.getAttribute("value")
+	console.log("quantityHandle", quantity_value)
+	if(quantity_value == 1){
+		minus.disabled = true
+	}
+
 </script>
 <style type="text/css">
 	body {
-		background-color: #F7F9F9; 
+		background-color: #edf2f7; 
 	}
 
 /*My Bill Block starts here*/
@@ -109,13 +177,20 @@
 		background-color: #FF5733;
 	}
 	.place_order {
-		margin-left: 20px;
+		margin-left: 25px;
 		margin-top: 20px;
 		color: white;
-		border-radius: 0px;
+		width: 250px;
+		font-size: 16px;
+		border-radius: 3px;
+		font-weight: bold;
+		height: 50px;
 	}
- 	.total_payable {
- 		padding-left: 30px;
+	.place_order:hover {
+		color: white;
+	}
+ 	#total_payable {
+ 		padding-left: 10px;
  		font-weight: bold;
  	}
  	.price_details {
@@ -126,19 +201,24 @@
 		padding-left: 30px;
 	}
 
-	.price_receipt {
+	#price_receipt {
+		padding-left:0px;	
+		padding-top: 20px;
+	}
+
+/*	#delivery_receipt {
 		padding-left:40px;	
 		padding-top: 10px;
 	}
-
+*/
 	.delivery_fee {
 		padding-left: 130px;
 	}
 
   .total_amount {
-  	padding-left: 130px;
+  	padding-left: 75px;
   }
-	.total_price {
+	#total_price {
 		padding-left: 120px;
 	}
 /*My Bill Block ends here*/
@@ -148,16 +228,25 @@
 		width: 250px;
 		margin-left: 460px;
 	}
-	.price {
+	#price {
 		padding-right: 4px;
 	}
-	.plus, .minus {
-  /*border: 2px solid;*/
-  border-radius: 25px;
+	#plus, #minus {
+	border: 1px solid;
+	border-color: #CDC8C5;
+	border-radius: 50%;
+  background-color: white;
+  width: 28px;
+  height: 28px;
+  line-height: 1;
+  display: inline-block;
 	}
-	.quantity {
-		/*border: 2px solid;*/
-    /*border-radius: 25px;*/
+
+	#quantity {
+		border: 1px solid;
+		border-color: #CDC8C5;
+    border-radius: 3px;;
+    background-color: white;
 		width: 50px;
 	}
 	.save_for_later, .remove {
@@ -201,7 +290,7 @@
 		padding-left: 0px;
 		font-size: 15px;
 	}
-	.cartItems {
+	#cart_items {
 		padding-left: 15px;
 		font-weight: bold;
 		font-size: 20px;

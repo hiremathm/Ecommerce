@@ -28,6 +28,8 @@ Rails.application.routes.draw do
 
   resources :reviews
   resources :cart_line_items
+  post '/increase_quantity' => 'cart_line_items#increase_quantity'
+  post '/decrease_quantity' => 'cart_line_items#decrease_quantity'
   resources :orders
   get 'addresses/contact'
   resources :addresses
