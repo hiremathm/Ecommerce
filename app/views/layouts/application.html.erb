@@ -115,17 +115,20 @@
   <nav class="navbar navbar-expand-sm bg-primary">
     <ul class="navbar-nav">
       <% if user_signed_in? && !current_user.is_admin %>
-        <li class="dropdown eCommerce"><a class="dropdown-toggle" data-toggle="dropdown">eCommerce</a>
+        <div class="dropdown eCommerce"><a class="dropdown-toggle" data-toggle="dropdown">eCommerce</a></div>
       <%else%>
        
       <% if user_signed_in? && current_user.is_admin %>
-        <li class="dropdown eCommerce"><a class="dropdown-toggle" data-toggle="dropdown">eCommerce<span class="caret"></span></a>
-          <ul class="dropdown-content">
-              <li><%= link_to "Add Product", new_product_path %></li>
-              <li><%= link_to "Add Category", new_category_path %></li>
-             <li><%= link_to "Add SubCategory", new_sub_category_path%></li>
-          </ul>
-        </li>
+        <div class="dropdown eCommerce">
+        <div class="dropdown-toggle" id="dropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        eCommerce
+        </div>
+        <div class="dropdown-menu" aria-labelledby="dropdownButton">
+          <%= link_to "Add Product", new_product_path, class: "dropdown-item" %>
+          <%= link_to "Add Category", new_category_path, class: "dropdown-item"%>
+          <%= link_to "Add SubCategory", new_sub_category_path, class: "dropdown-item" %>       
+        </div>
+      </div>
       <% end %>
       <%end %>
     </ul>
@@ -141,12 +144,14 @@
     </ul>
 
   <% if user_signed_in? %>
-  <div class="dropdown">
-    <div class="dropbtn">Account</div>
-    <div class="dropdown-content">
-      <%= link_to "Profile", edit_user_registration_path %>
-      <%= link_to "Add Address", addresses_path%>
-      <%= link_to "Logout", destroy_user_session_path, method: :delete %>    
+  <div class="dropdown  dropbtn">
+    <div class="dropdown-toggle " id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      My Account
+    </div>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %>
+      <%= link_to "Add Address", addresses_path , class: "dropdown-item"%>
+      <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item" %>        
     </div>
   </div>
   <% else %>
@@ -165,7 +170,7 @@
           </div>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <%SubCategory.where(category_id: category.id).each do |subcategory|%>
-              <div class="subcategory"><a href="/sub_categories/<%= subcategory.id%>"><%= subcategory.name.capitalize%></a></div>
+              <div><a class = "dropdown-item" href="/sub_categories/<%= subcategory.id%>"><%= subcategory.name.capitalize%></a></div>
             <%end%>            
           </div>
         </div>
@@ -178,10 +183,11 @@
 
 
 <style type="text/css">
-.dropdown:hover>.dropdown-menu {
-  display: block;
-}
-  .subcategory {
+  .dropdown:hover>.dropdown-menu {
+    display: block;
+    
+  }
+/*  .subcategory {
     margin-top: 8px;
     font-size: 12px;
     width: 100%;
@@ -196,7 +202,7 @@
   .subcategory a:hover {
     color: blue;
     text-decoration: none;
-  }
+  }*/
 
   .no-items-found {
     width: 100px;
@@ -212,10 +218,14 @@
     margin-left: 20px;
   }
   #paths {
-    margin-left: 50%;
+    margin-left: 40%;
   }
   #orders_path, #cart_item_path {
-    margin-left: 10px;
+    margin-left: 30px;
+  }
+
+  #paths, a:hover {
+    text-decoration: none
   }
 
   .product-dropdown {
@@ -297,9 +307,8 @@
     border: none;
     cursor: pointer;
     color: white;
-    margin-left: 120px;
+    margin-left: 90px;
   }
-
   .dropdown {
     position: relative;
     display: inline-block;
@@ -334,3 +343,7 @@
     height: 55px;
   }
 </style>
+
+<script type="text/javascript">
+  $('[data-toggle-second="tooltip"]').tooltip();
+</script>
