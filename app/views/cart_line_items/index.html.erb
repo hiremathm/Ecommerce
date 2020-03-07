@@ -121,16 +121,16 @@
 
 	//disable quantity 
 	var quantity_value = quantityHandle.getAttribute("value")
-	console.log("quantityHandle", quantity)
-	if(quantity == 1){
+	if(quantity_value == 1){
 		minus.disabled = true
 	}else{
 		minus.disabled = false
 	}
 	
 	plus.addEventListener('click', function(){
-		console.log("quantityHandle", quantity)
-		if(quantity == 1){
+		console.log("quantityHandle", quantity_value)
+		
+		if(Number(quantity_value) == 1){
 			minus.disabled = true
 		}else{
 			minus.disabled = false
@@ -143,29 +143,29 @@
 			},
 			function(data){
 
-				var t = "" 
-				if(data['quantity'] > 1){
-					t = ' items'
-				}else{
-					t = ' item'
-				}				
-				var cartItemText = "My Cart ("+data["quantity"]+")"
-				var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['total_quantity']+'</td><td>₹'+data['total_price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
+				// var t = "" 
+				// if(data['quantity'] > 1){
+				// 	t = ' items'
+				// }else{
+				// 	t = ' item'
+				// }				
+				// var cartItemText = "My Cart ("+data["quantity"]+")"
+				// var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['total_quantity']+'</td><td>₹'+data['total_price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
 				
-				priceReceiptHandle.innerHTML = table;
-				cartitemHandle.innerHTML = cartItemText
-				quantityHandle.innerHTML = data["quantity"];
-				priceHandle.innerHTML = "₹"+data["price"];
-				totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['total_price']+'</span>'
+				// priceReceiptHandle.innerHTML = table;
+				// cartitemHandle.innerHTML = cartItemText
+				// quantityHandle.innerHTML = data["quantity"];
+				// priceHandle.innerHTML = "₹"+data["price"];
+				// totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['total_price']+'</span>'
 
-				// location.reload();
+				location.reload();
 			});
 
 		}
 	}) 
 	minus.addEventListener('click', function(){
-		console.log("quantity_value", quantity)
-		if(quantity == 1){
+		console.log("quantityHandle", quantity_value)
+		if(Number(quantity_value) == 1){
 			minus.disabled = true
 		}else{
 			minus.disabled = false
@@ -177,23 +177,23 @@
 			id: id,quantity: quantity
 		},
 		function(data){
-			console.log("response: ", data);
-			var t = "" 
-				if(data['quantity'] > 1){
-					t = ' items'
-				}else{
-					t = ' item'
-				}				
-				var cartItemText = "My Cart ("+data["quantity"]+")"
-				var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['quantity']+'</td><td>₹'+data['price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
+			// console.log("response: ", data);
+			// var t = "" 
+			// 	if(data['quantity'] > 1){
+			// 		t = ' items'
+			// 	}else{
+			// 		t = ' item'
+			// 	}				
+			// 	var cartItemText = "My Cart ("+data["quantity"]+")"
+			// 	var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['quantity']+'</td><td>₹'+data['price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
 				
-				priceReceiptHandle.innerHTML = table;
-				cartitemHandle.innerHTML = cartItemText
-				quantityHandle.innerHTML = data["quantity"];
-				priceHandle.innerHTML = "₹"+data["price"];
-				totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['price']+'</span>'
+			// 	priceReceiptHandle.innerHTML = table;
+			// 	cartitemHandle.innerHTML = cartItemText
+			// 	quantityHandle.innerHTML = data["quantity"];
+			// 	priceHandle.innerHTML = "₹"+data["price"];
+			// 	totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['price']+'</span>'
 
-				// location.reload();
+				location.reload();
 		});}
 	})
 		})
