@@ -33,9 +33,13 @@ class CartLineItemsController < ApplicationController
 		cart_line_item = CartLineItem.find_by id: params["id"]
 		cart_line_item.quantity = cart_line_item.quantity + 1
 		cart_line_item.save
-
+		total_quantity =  current_user.cart_line_items.map(&:quantity).inject(:+)
 		price = cart_line_item.product.price * cart_line_item.quantity
-		response = {data: "successfully added", status: true, quantity: cart_line_item.quantity, price: price}
+		total_price = 0
+		current_user.cart_line_items.each do |item|
+			total_price += item.quantity * item.product.price
+		end
+		response = {data: "successfully added", status: true, quantity: cart_line_item.quantity, price: price, total_quantity: total_quantity, total_price: total_price}
 
 		render json: response
 	end
@@ -45,7 +49,12 @@ class CartLineItemsController < ApplicationController
 		cart_line_item.quantity = cart_line_item.quantity - 1
 		cart_line_item.save
 		price = cart_line_item.product.price * cart_line_item.quantity
-		response = {data: "successfully added", status: true, quantity: cart_line_item.quantity, price: price}
+		total_quantity =  current_user.cart_line_items.map(&:quantity).inject(:+)
+		total_price = 0
+		current_user.cart_line_items.each do |item|
+			total_price += item.quantity * item.product.price
+		end
+		response = {data: "successfully added", status: true, quantity: cart_line_item.quantity, price: price, total_quantity: total_quantity, total_price: total_price}
 
 		render json: response
 	end

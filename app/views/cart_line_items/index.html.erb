@@ -30,8 +30,7 @@
 						<%day = Random.rand(1..10)%>
 						<% delivery_amount = Random.rand(100..200)%>
 						<%delivery_fee += day > 3 ?  0 : delivery_amount%>
-						<div id="quantity_price" value="<%=value[0]["id"]%>|<%=quantity%>|<%= delivery_fee%>"></div>
-					
+						<div id="quantity_price" value="<%=value[0]["id"]%>|<%=quantity%>|<%= delivery_fee%>|<%= total_quantity%>"></div>
 
 						<tr>
 							<div class="row">
@@ -43,6 +42,7 @@
 							</div>
 							<div class="row actions">
 								<div class="col-sm-3">
+									<div class="test_field"></div>
 									<button id="minus">-</button>
 									<button id="quantity" value="<%= quantity%>"><%= quantity%></button> 
 									<button id="plus">+</button>
@@ -89,6 +89,7 @@
 </body>
 </html>
 <script type="text/javascript">
+	$(document).ready(function(){
 	// add address id
 	var address_list = document.getElementById('address_list')
 	var address_id = document.getElementById('address_id')
@@ -96,11 +97,10 @@
 	var totalPriceHandle = document.getElementById('total_price')
 	var totalPaybleHandle = document.getElementById('total_payable')
 	var deliveryChargeHandle = document.getElementById('delivery_charge')
-
 	address_list.addEventListener('change', function(){
 		address_id.value = address_list.value	
 	})
-	
+
 	// send cart id , and quantity
 	var plus = document.getElementById('plus')
 	var minus = document.getElementById('minus')
@@ -112,12 +112,31 @@
 	var id = str.split('|')[0]
 	var quantity = Number(str.split('|')[1])
 	var delivery_price = Number(str.split('|')[2])
+	var total_quantity = Number(str.split('|')[3])
 	var total_delivery_price = 'Free'
 	if(delivery_price > 0)
 	{
 		total_delivery_price = "₹"+delivery_price
 	}
+
+	//disable quantity 
+	var quantity_value = quantityHandle.getAttribute("value")
+	console.log("quantityHandle", quantity)
+	if(quantity == 1){
+		minus.disabled = true
+	}else{
+		minus.disabled = false
+	}
+	
 	plus.addEventListener('click', function(){
+		console.log("quantityHandle", quantity)
+		if(quantity == 1){
+			minus.disabled = true
+		}else{
+			minus.disabled = false
+		}
+
+
 		if(quantity > 0){
 			$.post("/increase_quantity",{
 				id: id,quantity: quantity
@@ -131,6 +150,41 @@
 					t = ' item'
 				}				
 				var cartItemText = "My Cart ("+data["quantity"]+")"
+				var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['total_quantity']+'</td><td>₹'+data['total_price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
+				
+				priceReceiptHandle.innerHTML = table;
+				cartitemHandle.innerHTML = cartItemText
+				quantityHandle.innerHTML = data["quantity"];
+				priceHandle.innerHTML = "₹"+data["price"];
+				totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['total_price']+'</span>'
+
+				// location.reload();
+			});
+
+		}
+	}) 
+	minus.addEventListener('click', function(){
+		console.log("quantity_value", quantity)
+		if(quantity == 1){
+			minus.disabled = true
+		}else{
+			minus.disabled = false
+		}
+
+
+		if(!(quantity <= 0)){
+		$.post("/decrease_quantity",{
+			id: id,quantity: quantity
+		},
+		function(data){
+			console.log("response: ", data);
+			var t = "" 
+				if(data['quantity'] > 1){
+					t = ' items'
+				}else{
+					t = ' item'
+				}				
+				var cartItemText = "My Cart ("+data["quantity"]+")"
 				var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['quantity']+'</td><td>₹'+data['price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
 				
 				priceReceiptHandle.innerHTML = table;
@@ -138,28 +192,11 @@
 				quantityHandle.innerHTML = data["quantity"];
 				priceHandle.innerHTML = "₹"+data["price"];
 				totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['price']+'</span>'
-			});
-		}
-	}) 
-	minus.addEventListener('click', function(){
-		if(!(quantity <= 0)){
-		$.post("/decrease_quantity",{
-			id: id,quantity: quantity
-		},
-		function(data){
-			console.log("response: ", data);
-			quantityHandle.innerHTML = data["quantity"];
-			priceHandle.innerHTML = "₹"+data["price"];
+
+				// location.reload();
 		});}
 	})
-
-	//disable quantity 
-	var quantity_value = quantityHandle.getAttribute("value")
-	console.log("quantityHandle", quantity_value)
-	if(quantity_value == 1){
-		minus.disabled = true
-	}
-
+		})
 </script>
 <style type="text/css">
 	body {
