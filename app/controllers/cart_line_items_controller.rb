@@ -59,6 +59,14 @@ class CartLineItemsController < ApplicationController
 		render json: response
 	end
 
+	def delete_cart_line_item
+		cart_line_item = CartLineItem.find_by id: params["id"]
+		if cart_line_item
+			cart_line_item.destroy
+		end
+		redirect_to cart_line_items_path
+	end
+
 	private 
 
 	def cart_line_item_params

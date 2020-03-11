@@ -21,8 +21,11 @@
 					<tbody>
 						<% total_price = 0%>
 						<% total_quantity = 0%>
+						<%# index = -1%>
 						<%@cart_line_items.each do |id, value| %>
+						<%# index += 1%>
 						<%quantity = value.map(&:quantity).inject(:+)%>
+						<%#index = index + 1%>
 						<%product = Product.find_by id: id%>
 						<%price = product.price * quantity%>
 						<%total_price += price%>
@@ -31,27 +34,29 @@
 						<% delivery_amount = Random.rand(100..200)%>
 						<%delivery_fee += day > 3 ?  0 : delivery_amount%>
 						<div id="quantity_price" value="<%=value[0]["id"]%>|<%=quantity%>|<%= delivery_fee%>|<%= total_quantity%>"></div>
-
+						
 						<tr>
 							<div class="row">
 								<div class="col-sm-2"><img class="image" src="<%= product.image_url %>" width="180px" height="150px"/></div>
 								<div class="col-sm-6 name"><%= product.name %><br/><br/>
 								<span class="seller">Seller: Retailer</span>	<br/>
-								<span id="price"> ₹<%= price%></span>   <s class="normal_price"> ₹<%= price * 10/ 100 %></s> <span class="off">10% Off   <span class="offers">4 Offers available</span></span><br/></div>
+								<span id="<%=value[0]["id"]%>_price"> ₹<%= price%></span>   <s class="normal_price"> ₹<%= price * 10/ 100 %></s> <span class="off">10% Off   <span class="offers">4 Offers available</span></span><br/></div>
 								<div class="col-sm-4 delivery_day">Delivery In  <%= day %> days, <%= (Date.today + day.days).strftime('%A').slice(0,3)%> | <span class="free"><%if day > 3 %>free <s>₹<%=delivery_amount %></s><%else%>fee ₹<%= delivery_amount %><%end%><span></div>
 							</div>
 							<div class="row actions">
 								<div class="col-sm-3">
-									<div class="test_field"></div>
-									<button id="minus">-</button>
-									<button id="quantity" value="<%= quantity%>"><%= quantity%></button> 
-									<button id="plus">+</button>
+									<%increase = "increase"%>
+									<%decrease = "decrease"%>
+									<button id="minus" onclick="clicked(<%=value[0]["id"]%>, <%=quantity%>, '<%= decrease%>', this)">-</button>
+									<button id="<%= value[0]["id"]%>_quantity" class="single_item_quantity" value="<%= quantity%>"><%= quantity%></button> 
+									<button id="plus"  name="<%= product.name%>" onclick="clicked(<%=value[0]["id"]%>, <%=quantity%>, '<%= increase%>')">+</button>
 								</div>
 								<div class="col-sm-4 ">
 									<a href="#" class="save_for_later">SAVE FOR LATER</a>
 								</div>
 								<div class="col-sm-3 ">
-									<a href="#" class="remove">REMOVE</a>
+									<!-- <a href="/remove_item/<%#= value[0]["id"]%>" class="remove">REMOVE</a> -->
+									<%= link_to "REMOVE" , remove_item_path(value[0]["id"])%>
 								</div>
 							</div>
 						</tr>
@@ -89,114 +94,104 @@
 </body>
 </html>
 <script type="text/javascript">
-	$(document).ready(function(){
-	// add address id
-	var address_list = document.getElementById('address_list')
-	var address_id = document.getElementById('address_id')
-	var priceReceiptHandle = document.getElementById('price_receipt')
-	var totalPriceHandle = document.getElementById('total_price')
-	var totalPaybleHandle = document.getElementById('total_payable')
-	var deliveryChargeHandle = document.getElementById('delivery_charge')
-	address_list.addEventListener('change', function(){
-		address_id.value = address_list.value	
-	})
+	// $(document).ready(function(){
+	// 	var minus = document.getElementById('minus')
+	// 	var quantity = document.getElementById('quantity').value
+	// 	if(Number(quantity) == 1 ){
+	// 		minus.disabled = true
+	// 	}else{
+	// 		minus.disabled = false
+	// 	}
+	// })
 
-	// send cart id , and quantity
-	var plus = document.getElementById('plus')
-	var minus = document.getElementById('minus')
-	var quantity_price = document.getElementById('quantity_price')
-	var quantityHandle  = document.getElementById('quantity')
-	var priceHandle  = document.getElementById('price')
-	var cartitemHandle = document.getElementById('cart_items')
-	var str = quantity_price.getAttribute("value")
-	var id = str.split('|')[0]
-	var quantity = Number(str.split('|')[1])
-	var delivery_price = Number(str.split('|')[2])
-	var total_quantity = Number(str.split('|')[3])
-	var total_delivery_price = 'Free'
-	if(delivery_price > 0)
-	{
-		total_delivery_price = "₹"+delivery_price
-	}
+	function clicked(id, quantity, type){
+		console.log('id is :: ', id)
 
-	//disable quantity 
-	var quantity_value = quantityHandle.getAttribute("value")
-	if(quantity_value == 1){
-		minus.disabled = true
-	}else{
-		minus.disabled = false
-	}
-	
-	plus.addEventListener('click', function(){
-		console.log("quantityHandle", quantity_value)
-		
-		if(Number(quantity_value) == 1){
-			minus.disabled = true
-		}else{
-			minus.disabled = false
-		}
-
-
-		if(quantity > 0){
-			$.post("/increase_quantity",{
-				id: id,quantity: quantity
-			},
-			function(data){
-
-				// var t = "" 
-				// if(data['quantity'] > 1){
-				// 	t = ' items'
-				// }else{
-				// 	t = ' item'
-				// }				
-				// var cartItemText = "My Cart ("+data["quantity"]+")"
-				// var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['total_quantity']+'</td><td>₹'+data['total_price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
-				
-				// priceReceiptHandle.innerHTML = table;
-				// cartitemHandle.innerHTML = cartItemText
-				// quantityHandle.innerHTML = data["quantity"];
-				// priceHandle.innerHTML = "₹"+data["price"];
-				// totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['total_price']+'</span>'
-
-				location.reload();
-			});
-
-		}
-	}) 
-	minus.addEventListener('click', function(){
-		console.log("quantityHandle", quantity_value)
-		if(Number(quantity_value) == 1){
-			minus.disabled = true
-		}else{
-			minus.disabled = false
-		}
-
-
-		if(!(quantity <= 0)){
-		$.post("/decrease_quantity",{
-			id: id,quantity: quantity
-		},
-		function(data){
-			// console.log("response: ", data);
-			// var t = "" 
-			// 	if(data['quantity'] > 1){
-			// 		t = ' items'
-			// 	}else{
-			// 		t = ' item'
-			// 	}				
-			// 	var cartItemText = "My Cart ("+data["quantity"]+")"
-			// 	var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['quantity']+'</td><td>₹'+data['price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
-				
-			// 	priceReceiptHandle.innerHTML = table;
-			// 	cartitemHandle.innerHTML = cartItemText
-			// 	quantityHandle.innerHTML = data["quantity"];
-			// 	priceHandle.innerHTML = "₹"+data["price"];
-			// 	totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['price']+'</span>'
-
-				location.reload();
-		});}
-	})
+		// send cart id , and quantity
+		var address_list = document.getElementById('address_list')
+		var address_id = document.getElementById('address_id')
+		var priceReceiptHandle = document.getElementById('price_receipt')
+		var totalPriceHandle = document.getElementById('total_price')
+		var totalPaybleHandle = document.getElementById('total_payable')
+		var deliveryChargeHandle = document.getElementById('delivery_charge')
+		address_list.addEventListener('change', function(){
+			address_id.value = address_list.value	
 		})
+
+		var plus = document.getElementById('plus')
+		var minus = document.getElementById('minus')
+		var quantity_price = document.getElementById('quantity_price')
+		var quantityHandle  = document.getElementById(id+'_quantity')
+		var priceHandle  = document.getElementById(id+'_price')
+		var cartitemHandle = document.getElementById('cart_items')
+		var str = quantity_price.getAttribute("value")
+		// var id = str.split('|')[0]
+		// var quantity = Number(str.split('|')[1])
+		var delivery_price = Number(str.split('|')[2])
+		var total_quantity = Number(str.split('|')[3])
+		var total_delivery_price = 'Free'
+		if(delivery_price > 0)
+		{
+			total_delivery_price = "₹"+delivery_price
+		}
+		// console.log("Quantity is :: ", quantityHandle.value)
+		if(Number(quantityHandle.value) == 2){
+			minus.disabled = true
+		}else if(Number(quantityHandle.value) >= 1){
+			minus.disabled = false
+		}
+
+		if(type == "increase"){
+			if(Number(quantityHandle.value) >= 0){
+				$.post("/increase_quantity",{
+					id: id
+				},
+				function(data){
+					var t = "" 
+					if(data['quantity'] > 1){
+						t = ' items'
+					}else{
+						t = ' item'
+					}				
+					var cartItemText = "My Cart ("+data["total_quantity"]+")"
+					var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['total_quantity']+'</td><td>₹'+data['total_price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
+					
+					priceReceiptHandle.innerHTML = table;
+					cartitemHandle.innerHTML = cartItemText
+					quantityHandle.innerHTML = data["quantity"];
+					quantityHandle.value = data["quantity"]
+					priceHandle.innerHTML = "₹"+data["price"];
+					totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['total_price']+'</span>'
+
+				});
+			}
+		}else{
+			if(!(Number(quantityHandle.value)) < 1){
+				console.log("quantityHandle.value", quantityHandle.value)
+				$.post("/decrease_quantity",{
+					id: id
+				},
+				function(data){
+					var t = "" 
+					if(data['quantity'] > 1){
+						t = ' items'
+					}else{
+						t = ' item'
+					}				
+					var cartItemText = "My Cart ("+data["total_quantity"]+")"
+					var table = '<table class="table" ><thead><tr><th>Items</th><th>Price</th><th>Delivery Charge</th></tr></thead><tbody><tr><td>'+data['total_quantity']+'</td><td>₹'+data['total_price']+'</td><td>'+total_delivery_price+'</td></tr></tbody></table>'
+					
+					priceReceiptHandle.innerHTML = table;
+					cartitemHandle.innerHTML = cartItemText
+					quantityHandle.innerHTML = data["quantity"];
+					quantityHandle.value = data["quantity"]
+					priceHandle.innerHTML = "₹"+data["price"];
+					totalPaybleHandle.innerHTML = 'Total Payble 	<span class="total_amount">₹'+data['total_price']+'</span>'
+
+				});
+			}
+		}
+	}
 </script>
 <style type="text/css">
 	body {
@@ -279,7 +274,7 @@
   display: inline-block;
 	}
 
-	#quantity {
+	.single_item_quantity {
 		border: 1px solid;
 		border-color: #CDC8C5;
     border-radius: 3px;;

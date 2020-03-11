@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   resources :cart_line_items
   post '/increase_quantity' => 'cart_line_items#increase_quantity'
   post '/decrease_quantity' => 'cart_line_items#decrease_quantity'
+  get '/remove_item/:id' => 'cart_line_items#delete_cart_line_item', as: :remove_item
   resources :orders
   get 'addresses/contact'
   resources :addresses
