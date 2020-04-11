@@ -300,4 +300,25 @@ a.each do |b|
 end
 
 
+#User.create(email: "shivasorab@gmail.com", username: "shiva", mobile: "9901602848", gender: "male", is_admin: true)
+#categories = ["Electronics", "Men", "Women", "Baby & Kids", "Home & Furniture", "Sports", "TV's and Appliences"] 
+#categories.each do |category|
+#  Category.create(name: category)
+#end
 
+#subcategories = ["mobile accessories", "laptops", "speakers", "desktop pcs", "computer accessories", "gaming accessories", "camera", "camera accessories", "network components", "tablets", "health care appliances", "Featured"] 
+
+#subcategories.each do |subcategory|
+# SubCategory.create(name: subcategory)
+#end
+
+#subcategoryitems = ["Mobile Cases", "Headphones & Headsets", "Power Banks", "Screenguards", "Memory Cards", "Smart Headphones", "Mobile Cables", "Mobile Chargers", "Mobile Holders"] 
+#subcategoryitems.each do |sub_cat_item|
+#  SubCategoryItem.create(name: sub_cat_item, sub_category_id: 1)
+#end
+
+data = [{"name"=>"Cubix Back Cover for Samsung Galaxy Note 8", "price"=>999, "stock"=>10, "category_id"=>1, "description"=>"Impact-Resistant TPU And Poly Carbonate Layers For Augmented Fortitude. Extra-Responsive Buttons Are Easy To Access. All Around Raised Lip & Edges Protect The Camera Ports & Screen Display. Kickstand Allow You To Watch Video And Present Mobile Screen. Speaker Grills Blast Audio Towards You Instead Of Away Providing An Improved Audio Experience. Reinforced Bumper Acts As An Air Cushion To Stop Impact Before It Reaches Your Phone. Precise Cutouts Engineered To Fit Your Mobile Perfectly Wide Ports To Accommodate All Chargers.", "cod_eligible"=>nil, "release_date"=>"Mon, 02 Mar 2020", "image_url"=>"https://rukminim1.flixcart.com/image/612/612/jrgo4280/cases-covers/back-cover/h/x/x/cubix-redi059-note-8-hybrid-cover-red-original-imafd963mfhhtwnd.jpeg?q=70","code"=>"DCT-869a", "tax_id"=>10, "net_price"=>1098, "sub_cat_id"=>1}, {"name"=>"Flipkart SmartBuy Back Cover for Realme 5", "price"=>129, "stock"=>100, "category_id"=>1, "description"=>"Sales Package\r\nMobile Phone Cover\r\nModel Number\r\nRM5_CF\r\nDesigned For\r\nRealme 5, Realme 5s, Realme 5i\r\nBrand Color\r\nBlack", "cod_eligible"=>nil, "release_date"=>"Mon, 02 Mar 2020", "image_url"=>"https://rukminim1.flixcart.com/image/612/612/k0y6cnk0/cases-covers/back-cover/2/p/f/flipkart-smartbuy-rm5-cf-original-imafkmhcpms48mqp.jpeg?q=70", "code"=>"DCT-f4c3", "tax_id"=>5, "net_price"=>135, "sub_cat_id"=>1}, {"name"=>"Flipkart SmartBuy Back Cover for Realme C3  (Transparent, Grip Case, Silicon)", "price"=>149, "stock"=>10, "category_id"=>2, "description"=>"\r\nThis soft silicone Transparent cover will protect and prevent your phone from scratches, damage and dust. The silicone cover is made from a lightweight tough strong high quality rubber/silicone material which will help you to keep your phone safe. It comes in smooth texture. This will not only look good on your phone but will protect it. This case will Style your mobile.", "cod_eligible"=>nil, "release_date"=>"Mon, 02 Mar 2020", "image_url"=>"https://rukminim1.flixcart.com/image/416/416/k6l2vm80/cases-covers/back-cover/g/u/g/fashionury-fs-rel-c3-tra-original-imafzzgzagphzfdc.jpeg?q=70", "code"=>"DCT-0cde", "tax_id"=>10, "net_price"=>163, "sub_cat_id"=>1}, {"name"=>"Flipkart SmartBuy Back Cover for Mi Redmi 8A  (Transparent, Flexible, Silicon)", "price"=>149, "stock"=>150, "category_id"=>2, "description"=>"Sales Package\r\nMobile Phone Cover\r\nModel Number\r\nR8A_TP\r\nDesigned For\r\nMi Redmi 8A\r\nBrand Color\r\nTransparent", "cod_eligible"=>nil, "release_date"=>"Mon, 02 Mar 2020", "image_url"=>"https://rukminim1.flixcart.com/image/416/416/k1l1ea80/cases-covers/back-cover/m/h/d/flipkart-smartbuy-r8a-tp-original-imafh4fyhakeazdh.jpeg?q=70", "code"=>"DCT-92ae", "tax_id"=>5, "net_price"=>156, "sub_cat_id"=>1}] 
+
+data.each do |product|
+ Product.create(product)
+end
